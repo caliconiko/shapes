@@ -13,7 +13,7 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
 > How to Shapes?????
 
 * Make sure the python version is 3.10 and `pip` is up-to-date.
->Psst, there is also a 3.9 version of this interpreter if you just can't bother instlling 3.10
+>Psst, there is also a 3.9 version of this interpreter if you just can't bother installing 3.10
 * Then, change your directory to wherever this file is located.
 * Install requirements with
   ```
