@@ -124,11 +124,6 @@ class Shape:
     def get_value(self):
         if self.get_shape_type()==ShapeEnum.NUMBER:
             return len(self.get_holes())
-        if self.get_shape_type()==ShapeEnum.STACK:
-            if len(self.value) >0:
-                return self.value[-1]
-            else:
-                return None
         return self.value
         
 
