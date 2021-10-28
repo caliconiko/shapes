@@ -400,8 +400,8 @@ class Parser:
                         Parser.contour_avg(s.contour),
                         cv2.FONT_HERSHEY_PLAIN,
                         2,
-                        (0, 0, 255),
-                        3,
+                        (0, 0, 0),
+                        2,
                     )
                 for k in s.connecteds.keys():
                     for i, c in enumerate(s.connecteds[k][1]):
