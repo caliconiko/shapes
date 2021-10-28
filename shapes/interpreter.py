@@ -330,6 +330,10 @@ class Interpreter:
                         if min_dist is None or dist<min_dist:
                             min_dist = dist
                             nearest = m
+
+                    if nearest is None:
+                        print("|finished due to dead-end|")
+                        exit()
                     self.current = nearest[0]
                     self.p_point = nearest[1]
                 case ShapeEnum.END:
