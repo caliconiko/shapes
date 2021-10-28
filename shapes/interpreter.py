@@ -147,42 +147,47 @@ class Interpreter:
                     self.default_next()
 
                 case ShapeEnum.NUMBER_CHECK:
-                    val = self.stack.pop()
-                    self.stack.append(int(self.check_number(val)))
+                    if len(self.stack)>0:
+                        val = self.stack.pop()
+                        self.stack.append(int(self.check_number(val)))
                     self.default_next()
 
                 case ShapeEnum.TO_STRING:
-                    self.stack.append(str(self.stack.pop()))
+                    if len(self.stack)>0:
+                        self.stack.append(str(self.stack.pop()))
                     self.default_next()
 
                 case ShapeEnum.TO_CHAR:
-                    val = self.stack.pop()
-                    if isinstance(val, (float, int)):
-                        self.stack.append(chr(int(val)))
-                    elif isinstance(val, str):
-                        self.stack.extend([i for i in val[::-1]])
+                    if len(self.stack)>0:
+                        val = self.stack.pop()
+                        if isinstance(val, (float, int)):
+                            self.stack.append(chr(int(val)))
+                        elif isinstance(val, str):
+                            self.stack.extend([i for i in val[::-1]])
                     self.default_next()
 
                 case ShapeEnum.CHR_TO_NUM:
-                    val = self.stack.pop()
-                    if isinstance(val, str):
-                        if len(val) == 1:
-                            self.stack.append(ord(val))
-                    else:
-                        self.stack.append(val)
+                    if len(self.stack)>0:
+                        val = self.stack.pop()
+                        if isinstance(val, str):
+                            if len(val) == 1:
+                                self.stack.append(ord(val))
+                        else:
+                            self.stack.append(val)
 
                     self.default_next()
 
                 case ShapeEnum.TO_NUMBER:
-                    val = self.stack.pop()
+                    if len(self.stack)>0:
+                        val = self.stack.pop()
 
-                    try:
-                        self.stack.append(int(val))
-                    except ValueError:
                         try:
-                            self.stack.append(float(val))
+                            self.stack.append(int(val))
                         except ValueError:
-                            self.stack.append(inp)
+                            try:
+                                self.stack.append(float(val))
+                            except ValueError:
+                                self.stack.append(inp)
 
                     self.default_next()
 
