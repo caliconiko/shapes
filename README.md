@@ -24,7 +24,7 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
   
 ## Shapes!!!
 Hi program
-[](https://github.com/PhotonNikko/shapes/blob/main/Hello.png)
+![](https://github.com/PhotonNikko/shapes/blob/main/Hello.png)
 
 truth machine
-[](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
+![](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
