@@ -22,7 +22,11 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
 * Interpret Shapes programs with 
   ```
   python -m shapes "path\to\program.png"
-  
+  ```
+* For more options and or thingies, do
+  ```
+  python -m shapes --help
+  ```
 ## Shapes!!!
 Hi program
 ![](https://github.com/PhotonNikko/shapes/blob/main/Hello.png)
