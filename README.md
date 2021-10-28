@@ -6,7 +6,7 @@ Shapes is a graphical esolang that uses images with shapes!
 
 In short, a Shapes program consists of shapes and paths connecting them. Each shape does different things depending on the shape of the shape.
 
-For more Shapes Information, go to the wiki.
+For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/shapes/wiki).
 
 ## Shapes?
 
@@ -21,3 +21,10 @@ For more Shapes Information, go to the wiki.
 * Interpret Shapes programs with 
   ```
   python -m shapes "path\to\program.png"
+  
+## Shapes!!!
+Hi program
+[](https://github.com/PhotonNikko/shapes/blob/main/Hello.png)
+
+truth machine
+[](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
