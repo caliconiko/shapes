@@ -9,7 +9,6 @@ class InterpreterError(Exception):
 
 class Interpreter:
     def __init__(self, shapes: List[Shape], verbose=False, time=0.3):
-        print("|this is 3.10 interpreter|")
         self.shapes = shapes
         self.stack = []
         self.current:None|Shape = None
