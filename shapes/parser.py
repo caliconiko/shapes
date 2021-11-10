@@ -24,6 +24,7 @@ class Parser:
         self.imgray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         self.home_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
         self.debug = debug
+        
     def get_path(self, path: str):
         return os.path.join(self.home_path, path)
 
