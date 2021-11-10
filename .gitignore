@@ -1,5 +1,2 @@
-shapes/__pycache__/__main__.cpython-310.pyc
-shapes/__pycache__/interpreter.cpython-310.pyc
-shapes/__pycache__/parser.cpython-310.pyc
-shapes/__pycache__/shape.cpython-310.pyc
-shapes/__pycache__/utils.cpython-310.pyc
+shapes/__pycache__/*
+shapes39/shapes/__pycache__/*
