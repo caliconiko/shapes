@@ -1,4 +1,5 @@
 opencv-python
+wheel
 numpy
 dotmap
 imutils

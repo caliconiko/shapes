@@ -1,6 +1,5 @@
 import cv2
 import os
-import pathlib
 import numpy as np
 from dotmap import DotMap
 import imutils
