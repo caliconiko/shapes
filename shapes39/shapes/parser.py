@@ -5,7 +5,7 @@ import numpy as np
 from dotmap import DotMap
 import imutils
 
-from shapes.shape import Shape
+from shapes39.shapes.shape import Shape
 
 
 class ParserError(Exception):

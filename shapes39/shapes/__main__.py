@@ -1,6 +1,6 @@
 import argparse
-from shapes.interpreter import Interpreter
-from shapes.parser import Parser
+from shapes39.shapes.interpreter import Interpreter
+from shapes39.shapes.parser import Parser
 
 
 def main():

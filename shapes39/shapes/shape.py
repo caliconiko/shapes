@@ -3,7 +3,7 @@ import numpy as np
 
 from enum import Enum, auto
 
-from shapes.utils import distance
+from shapes39.shapes.utils import distance
 
 
 class ShapeEnum(Enum):

@@ -1,7 +1,7 @@
-from shapes.shape import Shape, ShapeEnum
+from shapes39.shapes.shape import Shape, ShapeEnum
 from typing import List, Union
 from time import sleep
-from shapes.utils import distance
+from shapes39.shapes.utils import distance
 
 class InterpreterError(Exception):
     pass
@@ -9,6 +9,7 @@ class InterpreterError(Exception):
 
 class Interpreter:
     def __init__(self, shapes: List[Shape], verbose=False, time=0.3):
+        print("|this is 3.9 interpreter|")
         self.shapes = shapes
         self.stack = []
         self.current:Union(Shape, None) = None
