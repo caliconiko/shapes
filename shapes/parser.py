@@ -389,14 +389,14 @@ class Parser:
                     cv2.drawContours(
                         self.debug_out, [s.contour], -1, (0, 255, 0), thickness=10
                     )
-            self.debug_save_image(self.debug_out, "out.png")
+            self.debug_save_image(self.debug_out, "seen.png")
 
             for i, s in enumerate(shapes):
                 if s.outer is None:
                     for p in s.points:
 
                         cv2.circle(self.debug_out, p[0], 5, (255, 0, 0), -1)
-                    self.debug_save_image(self.debug_out, "out.png")
+                    self.debug_save_image(self.debug_out, "seen.png")
                     cv2.putText(
                         self.debug_out,
                         f"{s.get_shape_type().name}",
