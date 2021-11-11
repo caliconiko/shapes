@@ -1,7 +1,7 @@
-from shapes39.shapes.shape import Shape, ShapeEnum
+from shapes.shape import Shape, ShapeEnum
 from typing import List
 from time import sleep
-from shapes39.shapes.utils import distance
+from shapes.utils import distance
 
 class InterpreterError(Exception):
     pass

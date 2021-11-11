@@ -24,6 +24,9 @@ class Parser:
         self.imgray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
         self.home_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
         self.debug = debug
+
+        if not os.path.isdir(self.get_path("debugging")):
+            os.mkdir(self.get_path("debugging"))
         
     def get_path(self, path: str):
         return os.path.join(self.home_path, path)
@@ -43,7 +46,7 @@ class Parser:
         return [color_index[0][i] for i in ordered_color_index]
 
     def debug_save_image(self, src, name):
-        cv2.imwrite(self.get_path(name), src)
+        cv2.imwrite(self.get_path("debugging/"+name), src)
 
     def get_color_ranges_mask(self, colors, img):
         c_range_sum = np.zeros(self.imgray.shape, np.uint8)
