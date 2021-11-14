@@ -2,6 +2,8 @@
 
 Shapes is a graphical esolang that uses images with shapes!
 
+Use this branch for the slow, unoptimized, and unmaintained Shapes experience
+
 ## Shapes‽
 
 In short, a Shapes program consists of shapes and paths connecting them. Each shape does different things depending on the shape of the shape.
