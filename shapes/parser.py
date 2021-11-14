@@ -3,6 +3,7 @@ import os
 import numpy as np
 from dotmap import DotMap
 import imutils
+from scipy.spatial import KDTree
 
 from shapes.shape import Shape
 
