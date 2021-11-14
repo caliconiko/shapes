@@ -309,7 +309,7 @@ class Parser:
                 fused_cnt_mask = Parser.mask_contour(fused_cnt, clean_fused)
                 fused_cnt_and_path_cnt = cv2.bitwise_and(fused_cnt_mask, path_cnt_mask)
 
-                if len(np.unique(fused_cnt_and_path_cnt)) > 1:
+                if np.any(fused_cnt_and_path_cnt==255):
                     path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
                     connected_shapes = cv2.subtract(fused_cnt_mask, path_cnt_dilate)
