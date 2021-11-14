@@ -3,6 +3,7 @@ import os
 import numpy as np
 from dotmap import DotMap
 import imutils
+from scipy.spatial import KDTree
 
 from shapes39.shapes.shape import Shape
 
@@ -272,11 +273,25 @@ class Parser:
     def get_no_hole_shapes(self, shapes):
         no_holes ={}
         for i, shape in enumerate(shapes):
-            no_holes[i] = shape
+            if shape.outer is None:
+                no_holes[i] = shape
         return no_holes
 
     def get_connections(self, path_contours, shapes, masks):
+        def flatten_circ(circ):
+            return (circ[0][0], circ[0][1], circ[1])
+
         connections = {}
+
+        shape_circles_dict = {}
+        shape_circles_list = []
+
+        for (ind, s) in shapes.items():
+            (x, y), radius = cv2.minEnclosingCircle(s.contour)
+            shape_circles_dict[(x, y, radius)] = ind
+            shape_circles_list.append((x, y, radius))
+
+        shape_tree = KDTree(shape_circles_list)
 
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
@@ -291,29 +306,25 @@ class Parser:
                 fused_cnt_mask = Parser.mask_contour(fused_cnt, clean_fused)
                 fused_cnt_and_path_cnt = cv2.bitwise_and(fused_cnt_mask, path_cnt_mask)
 
-                if len(np.unique(fused_cnt_and_path_cnt)) > 1:
+                if np.any(fused_cnt_and_path_cnt==255):
                     path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
-
 
                     connected_shapes = cv2.subtract(fused_cnt_mask, path_cnt_dilate)
 
                     connected_shapes_contours, _ = cv2.findContours(
                         connected_shapes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                     )
+
                     for k, connected_cnt in enumerate(connected_shapes_contours):
-                        for (l, shape) in shapes.items():
-                            if shape.outer is None:
+                        c_circ = flatten_circ(cv2.minEnclosingCircle(connected_cnt))
 
-                                shape_and_connected = cv2.bitwise_and(
-                                    Parser.mask_contour(shape.contour, self.img),
-                                    Parser.mask_contour(connected_cnt, self.img),
-                                )
+                        q_circ = shape_circles_list[shape_tree.query(c_circ)[1]]
+                        q_shape = shape_circles_dict[q_circ]
 
-                                if np.any(shape_and_connected==255):
-                                    if i not in connections.keys():
-                                        connections[i] = [l]
-                                    else:
-                                        connections[i].append(l)
+                        if i not in connections.keys():
+                            connections[i] = [q_shape]
+                        else:
+                            connections[i].append(q_shape)
 
         return connections
 

@@ -58,6 +58,7 @@ class Interpreter:
 
     def run(self):
         self.current = self.get_start()
+        steps = 0
 
         while True:
             if self.verbose:
@@ -343,6 +344,7 @@ class Interpreter:
             
             elif shape_type == ShapeEnum.ANY:
                 self.default_next()
+            steps += 1
             if self.verbose:
                 print("--------------------------------------")
             sleep(self.time)

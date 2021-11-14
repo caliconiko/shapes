@@ -11,12 +11,16 @@ def main():
     arg_parser.add_argument("-v", '--verbose', action='store_true',help="print extra stuff (good for debugging)")
     arg_parser.add_argument("-d", '--debug', action='store_true',help="shows what the program sees (also good for debugging)")
     arg_parser.add_argument("-p", "--profile", action='store_true', help="cprofile the parseing")
+    
     args = arg_parser.parse_args()
     
-    print("|parsing...|")
     if args.profile:
+        print("|profiling...|")
         cProfile.runctx("Parser(args.path, args.debug).parse_shapes()", globals(), locals())
+        print("|profiled!|")
         exit()
+        
+    print("|parsing...|")
     parser = Parser(args.path, args.debug)
     parse_start = time()
     shapes = parser.parse_shapes()
