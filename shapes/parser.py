@@ -27,6 +27,9 @@ class Parser:
 
         if not os.path.isdir(self.get_path("debugging")):
             os.mkdir(self.get_path("debugging"))
+
+        if not os.path.isdir(self.get_path("debugging/p")):
+            os.mkdir(self.get_path("debugging/p"))
         
     def get_path(self, path: str):
         return os.path.join(self.home_path, path)
@@ -294,22 +297,30 @@ class Parser:
                 if len(np.unique(fused_cnt_and_path_cnt)) > 1:
                     path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
-
                     connected_shapes = cv2.subtract(fused_cnt_mask, path_cnt_dilate)
 
                     connected_shapes_contours, _ = cv2.findContours(
                         connected_shapes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                     )
+
                     for k, connected_cnt in enumerate(connected_shapes_contours):
                         for (l, shape) in shapes.items():
                             if shape.outer is None:
 
+                                shape_mask = Parser.mask_contour(shape.contour, self.img)
+                                connected_mask = Parser.mask_contour(connected_cnt, self.img)
+
                                 shape_and_connected = cv2.bitwise_and(
-                                    Parser.mask_contour(shape.contour, self.img),
-                                    Parser.mask_contour(connected_cnt, self.img),
+                                    shape_mask,
+                                    connected_mask,
                                 )
 
                                 if np.any(shape_and_connected==255):
+                                    s_center = Parser.contour_center(shape.contour)
+                                    c_center = Parser.contour_center(connected_cnt)
+
+                                    self.debug_save_image(shape_mask, f"p/{i}-{l}-s-{s_center}.png")
+                                    self.debug_save_image(connected_mask, f"p/{i}-{l}-c-{c_center}.png")
                                     if i not in connections.keys():
                                         connections[i] = [l]
                                     else:
