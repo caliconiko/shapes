@@ -28,9 +28,6 @@ class Parser:
 
         if not os.path.isdir(self.get_path("debugging")):
             os.mkdir(self.get_path("debugging"))
-
-        if not os.path.isdir(self.get_path("debugging/p")):
-            os.mkdir(self.get_path("debugging/p"))
         
     def get_path(self, path: str):
         return os.path.join(self.home_path, path)
