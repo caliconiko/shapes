@@ -280,7 +280,20 @@ class Parser:
         return no_holes
 
     def get_connections(self, path_contours, shapes, masks):
+        def flatten_circ(circ):
+            return (circ[0][0], circ[0][1], circ[1])
+
         connections = {}
+
+        shape_circles_dict = {}
+        shape_circles_list = []
+
+        for (ind, s) in shapes.items():
+            (x, y), radius = cv2.minEnclosingCircle(s.contour)
+            shape_circles_dict[(x, y, radius)] = ind
+            shape_circles_list.append((x, y, radius))
+
+        shape_tree = KDTree(shape_circles_list)
 
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
@@ -305,27 +318,15 @@ class Parser:
                     )
 
                     for k, connected_cnt in enumerate(connected_shapes_contours):
-                        for (l, shape) in shapes.items():
-                            if shape.outer is None:
+                        c_circ = flatten_circ(cv2.minEnclosingCircle(connected_cnt))
 
-                                shape_mask = Parser.mask_contour(shape.contour, self.img)
-                                connected_mask = Parser.mask_contour(connected_cnt, self.img)
+                        q_circ = shape_circles_list[shape_tree.query(c_circ)[1]]
+                        q_shape = shape_circles_dict[q_circ]
 
-                                shape_and_connected = cv2.bitwise_and(
-                                    shape_mask,
-                                    connected_mask,
-                                )
-
-                                if np.any(shape_and_connected==255):
-                                    s_center = Parser.contour_center(shape.contour)
-                                    c_center = Parser.contour_center(connected_cnt)
-
-                                    self.debug_save_image(shape_mask, f"p/{i}-{l}-s-{s_center}.png")
-                                    self.debug_save_image(connected_mask, f"p/{i}-{l}-c-{c_center}.png")
-                                    if i not in connections.keys():
-                                        connections[i] = [l]
-                                    else:
-                                        connections[i].append(l)
+                        if i not in connections.keys():
+                            connections[i] = [q_shape]
+                        else:
+                            connections[i].append(q_shape)
 
         return connections
 
