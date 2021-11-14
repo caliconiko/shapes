@@ -1,7 +1,7 @@
 import argparse
 from shapes.interpreter import Interpreter
 from shapes.parser import Parser
-
+from time import time
 
 def main():
     arg_parser = argparse.ArgumentParser(description="Shapes Interpreter for Python 3.10")
@@ -14,8 +14,10 @@ def main():
     
     print("|parsing...|")
     parser = Parser(args.path, args.debug)
+    parse_start = time()
     shapes = parser.parse_shapes()
-    print("|parsed!|")
+    parse_end = time()
+    print(f"|parsed! {parse_end-parse_start} seconds elapsed|")
     print("--------------------------------------")
     t=args.time
     if args.time is None:
