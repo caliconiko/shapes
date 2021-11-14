@@ -276,7 +276,8 @@ class Parser:
     def get_no_hole_shapes(self, shapes):
         no_holes ={}
         for i, shape in enumerate(shapes):
-            no_holes[i] = shape
+            if shape.outer is None:
+                no_holes[i] = shape
         return no_holes
 
     def get_connections(self, path_contours, shapes, masks):
