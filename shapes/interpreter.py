@@ -58,10 +58,11 @@ class Interpreter:
 
     def run(self):
         self.current = self.get_start()
+        steps = 0
 
         while True:
             if self.verbose:
-                print(f"|current: {self.current.get_shape_type().name}|")
+                print(f"|{steps}, current: {self.current.get_shape_type().name}|")
                 print(f"|number of points of current: {len(self.current.points)}|")
                 print(f"|global stack: {self.stack}|")
             self.previous = self.current
@@ -342,6 +343,7 @@ class Interpreter:
                 
                 case ShapeEnum.ANY:
                     self.default_next()
+            steps += 1
             if self.verbose:
                 print("--------------------------------------")
             sleep(self.time)

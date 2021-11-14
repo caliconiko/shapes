@@ -3,3 +3,4 @@ wheel
 numpy
 dotmap
 imutils
+scipy

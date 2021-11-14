@@ -2,6 +2,7 @@ import argparse
 from shapes39.shapes.interpreter import Interpreter
 from shapes39.shapes.parser import Parser
 from time import time
+import cProfile
 
 def main():
     arg_parser = argparse.ArgumentParser(description="Shapes Interpreter for Python 3.9")
@@ -9,9 +10,16 @@ def main():
     arg_parser.add_argument("-t", '--time', type=float, help="seconds to wait for every step")
     arg_parser.add_argument("-v", '--verbose', action='store_true',help="print extra stuff (good for debugging)")
     arg_parser.add_argument("-d", '--debug', action='store_true',help="shows what the program sees (also good for debugging)")
+    arg_parser.add_argument("-p", "--profile", action='store_true', help="cprofile the parsing")
 
     args = arg_parser.parse_args()
     
+    if args.profile:
+        print("|profiling...|")
+        cProfile.runctx("Parser(args.path, args.debug).parse_shapes()", globals(), locals())
+        print("|profiled!|")
+        exit()
+
     print("|parsing...|")
     parser = Parser(args.path, args.debug)
     parse_start = time()
