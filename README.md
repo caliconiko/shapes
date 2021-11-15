@@ -14,6 +14,8 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
 
 * Make sure the python version is 3.10 and `pip` is up-to-date.
 >Psst, there is also a [3.9 version of this interpreter](https://github.com/PhotonNikko/shapes/tree/main/shapes39/shapes) if you just can't bother installing 3.10
+* Clone this repo
+>Or clone the [slow branch](https://github.com/photon-niko/shapes/tree/slow) for Slow Shapes™
 * Then, change your directory to wherever this file is located.
 * Install requirements with
   ```
