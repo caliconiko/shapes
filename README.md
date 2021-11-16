@@ -31,7 +31,7 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
   ```
 ## Shapes!!!
 Hello, World! (parse time: 50ish seconds)
-![](https://github.com/PhotonNikko/shapes/blob/main/Hello.png)
+![](https://github.com/PhotonNikko/shapes/blob/main/helloworld.png)
 
 Truth machine
 ![](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
