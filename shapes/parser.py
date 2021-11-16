@@ -293,6 +293,8 @@ class Parser:
 
         shape_tree = KDTree(shape_circles_list)
 
+        real_back = cv2.bitwise_not(cv2.bitwise_or(masks.shape, masks.path))
+
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
             fused = cv2.bitwise_or(path_cnt_mask, masks.shape)
@@ -301,6 +303,20 @@ class Parser:
             fused_contours, _ = cv2.findContours(
                 clean_fused, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
             )
+
+            all_except = cv2.bitwise_xor(masks.path, path_cnt_mask)
+            
+            flooded = clean_fused.copy()
+            [cv2.floodFill(flooded, None, cnt[rand_i][0], 100) for rand_i in np.random.choice(range(len(cnt)), 5)]
+
+            flooded_ranged = cv2.inRange(flooded, 100, 100)
+            flooded_sub = flooded_ranged - real_back
+            flooded_final = flooded_sub - all_except
+
+            self.debug_save_image(flooded_final, f"{i}-floooood.png")
+            self.debug_save_image(flooded_ranged, f"{i}-flood.png")
+            self.debug_save_image(clean_fused, f"{i}-control.png")
+
 
             for j, fused_cnt in enumerate(fused_contours):
                 fused_cnt_mask = Parser.mask_contour(fused_cnt, clean_fused)
