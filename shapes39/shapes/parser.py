@@ -138,9 +138,14 @@ class Parser:
         return mask_map
 
     @staticmethod
-    def clean_holes(img, kernel_size=2):
+    def clean_holes(img, kernel_size=2, iters=1):
         kernel = np.ones((kernel_size, kernel_size), np.uint8)
-        return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+        return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel, iterations=iters)
+
+    @staticmethod
+    def clean(img, kernel_size=2):
+        kernel = np.ones((kernel_size, kernel_size), np.uint8)
+        return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
 
     @staticmethod
     def get_circles(img):
@@ -293,6 +298,12 @@ class Parser:
 
         shape_tree = KDTree(shape_circles_list)
 
+        real_back = cv2.bitwise_not(cv2.bitwise_or(masks.shape, masks.path))
+        back_only_flood = real_back.copy()
+        cv2.floodFill(back_only_flood, None, (0,0), 0)[1]
+        back_only = cv2.bitwise_xor(back_only_flood, real_back)
+        shapes_or_path_no_holes = cv2.bitwise_not(back_only)
+
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
             fused = cv2.bitwise_or(path_cnt_mask, masks.shape)
@@ -302,29 +313,43 @@ class Parser:
                 clean_fused, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
             )
 
-            for j, fused_cnt in enumerate(fused_contours):
-                fused_cnt_mask = Parser.mask_contour(fused_cnt, clean_fused)
-                fused_cnt_and_path_cnt = cv2.bitwise_and(fused_cnt_mask, path_cnt_mask)
+            all_except = cv2.bitwise_xor(masks.path, path_cnt_mask)
+            
+            flooded = clean_fused.copy()
+            [cv2.floodFill(flooded, None, cnt[rand_i][0], 100) for rand_i in np.random.choice(range(len(cnt)), 5)]
 
-                if np.any(fused_cnt_and_path_cnt==255):
-                    path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
+            flooded_ranged = cv2.inRange(flooded, 100, 100)
+            flooded_sub = flooded_ranged - real_back
+            flooded_final = flooded_sub - all_except
+            flooded_clean = Parser.clean(flooded_final)
+            flooded_clean = Parser.dilate(flooded_clean)
+            flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
+            flooded_clean = cv2.bitwise_and(flooded_clean, shapes_or_path_no_holes)
 
-                    connected_shapes = cv2.subtract(fused_cnt_mask, path_cnt_dilate)
+            path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
-                    connected_shapes_contours, _ = cv2.findContours(
-                        connected_shapes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
-                    )
+            connected_shapes = flooded_clean - path_cnt_dilate
+            connected_shapes_f = connected_shapes.copy()
+            cv2.floodFill(connected_shapes_f, None, (0,0), 100, 10, 10)
+            connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
+            connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
+            connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
 
-                    for k, connected_cnt in enumerate(connected_shapes_contours):
-                        c_circ = flatten_circ(cv2.minEnclosingCircle(connected_cnt))
+            connected_shapes_contours, _ = cv2.findContours(
+                connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+            )
 
-                        q_circ = shape_circles_list[shape_tree.query(c_circ)[1]]
-                        q_shape = shape_circles_dict[q_circ]
+            for k, connected_cnt in enumerate(connected_shapes_contours):
+                c_circ = flatten_circ(cv2.minEnclosingCircle(connected_cnt))
 
-                        if i not in connections.keys():
-                            connections[i] = [q_shape]
-                        else:
-                            connections[i].append(q_shape)
+                q_circ = shape_circles_list[shape_tree.query(c_circ)[1]]
+                q_shape = shape_circles_dict[q_circ]
+
+                if i not in connections.keys():
+                    connections[i] = [q_shape]
+                else:
+                    connections[i].append(q_shape)
+                    connections[i] = list(set(connections[i]))
 
         return connections
 
@@ -388,6 +413,7 @@ class Parser:
                         s_and_c_t_contours, _ = cv2.findContours(
                             shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                         )
+                        
                         connecting_point = Parser.contour_center(s_and_c_contours[0])
                         connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
                         shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)

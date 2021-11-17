@@ -62,12 +62,11 @@ class Interpreter:
 
         while True:
             if self.verbose:
-                print(f"|current: {self.current.get_shape_type().name}|")
+                print(f"|{steps}, current: {self.current.get_shape_type().name}|")
                 print(f"|number of points of current: {len(self.current.points)}|")
                 print(f"|global stack: {self.stack}|")
             self.previous = self.current
             shape_type = self.current.get_shape_type()
-
             if shape_type == ShapeEnum.START:
                 # print(self.current.connecteds)
                 self.p_point = self.current.connecteds[list(self.current.connecteds.keys())[0]][1][0][1]
