@@ -324,31 +324,25 @@ class Parser:
 
             self.debug_save_image(flooded_clean, f"{i}-floooood.png")
             self.debug_save_image(clean_fused, f"{i}-control.png")
+            
+            path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
+            connected_shapes = flooded_clean - path_cnt_dilate
 
-            for j, fused_cnt in enumerate(fused_contours):
-                fused_cnt_mask = Parser.mask_contour(fused_cnt, clean_fused)
-                fused_cnt_and_path_cnt = cv2.bitwise_and(fused_cnt_mask, path_cnt_mask)
+            connected_shapes_contours, _ = cv2.findContours(
+                connected_shapes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+            )
 
-                if np.any(fused_cnt_and_path_cnt==255):
-                    path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
+            for k, connected_cnt in enumerate(connected_shapes_contours):
+                c_circ = flatten_circ(cv2.minEnclosingCircle(connected_cnt))
 
-                    connected_shapes = cv2.subtract(fused_cnt_mask, path_cnt_dilate)
+                q_circ = shape_circles_list[shape_tree.query(c_circ)[1]]
+                q_shape = shape_circles_dict[q_circ]
 
-                    connected_shapes_contours, _ = cv2.findContours(
-                        connected_shapes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
-                    )
-
-                    for k, connected_cnt in enumerate(connected_shapes_contours):
-                        c_circ = flatten_circ(cv2.minEnclosingCircle(connected_cnt))
-
-                        q_circ = shape_circles_list[shape_tree.query(c_circ)[1]]
-                        q_shape = shape_circles_dict[q_circ]
-
-                        if i not in connections.keys():
-                            connections[i] = [q_shape]
-                        else:
-                            connections[i].append(q_shape)
+                if i not in connections.keys():
+                    connections[i] = [q_shape]
+                else:
+                    connections[i].append(q_shape)
 
         return connections
 
@@ -384,6 +378,8 @@ class Parser:
         shapes = self.get_shapes(shape_contours, shape_hierarchy, masks.shape)
 
         connections = self.get_connections(path_contours, self.get_no_hole_shapes(shapes), masks)
+
+        print(connections)
 
         for k in connections.keys():
             for i, si in enumerate(connections[k]):
