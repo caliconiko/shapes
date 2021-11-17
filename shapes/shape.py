@@ -215,3 +215,12 @@ class Shape:
             if distance_to_root % 2 == 1:
                 holes.append(c)
         return holes
+
+    def recursive_get_connection_string(self, n = 0):
+        try:
+            if n>5:
+                return "a"
+            ret = f"{self.get_shape_type().name} : [{', '.join([c[0].recursive_get_connection_string(n+1) for v in self.connecteds.values() for c in v[1] if c[0] is not self])}]"
+            return ret
+        except Exception as e:
+            print(e)
