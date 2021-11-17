@@ -333,11 +333,15 @@ class Parser:
             path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
             connected_shapes = flooded_clean - path_cnt_dilate
+            connected_shapes_f = connected_shapes.copy()
+            cv2.floodFill(connected_shapes_f, None, (0,0), 100, 10, 10)
+            connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
+            connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
 
-            self.debug_save_image(connected_shapes, f"{i}-connections-fix.png")
+            self.debug_save_image(connected_shapes_clean, f"{i}-connections-fix.png")
 
             connected_shapes_contours, _ = cv2.findContours(
-                connected_shapes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+                connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
             )
 
             for k, connected_cnt in enumerate(connected_shapes_contours):
