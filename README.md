@@ -30,8 +30,8 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
   python -m shapes --help
   ```
 ## Shapes!!!
-Hi program
-![](https://github.com/PhotonNikko/shapes/blob/main/Hello.png)
+Hello, World! (parse time: 50ish seconds)
+![](https://github.com/PhotonNikko/shapes/blob/main/helloworld.png)
 
-truth machine
+Truth machine
 ![](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
