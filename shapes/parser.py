@@ -304,8 +304,6 @@ class Parser:
         back_only = cv2.bitwise_xor(back_only_flood, real_back)
         shapes_or_path_no_holes = cv2.bitwise_not(back_only)
 
-        self.debug_save_image(back_only, "back_only.png")
-
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
             fused = cv2.bitwise_or(path_cnt_mask, masks.shape)
@@ -328,8 +326,6 @@ class Parser:
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
             flooded_clean = cv2.bitwise_and(flooded_clean, shapes_or_path_no_holes)
 
-            self.debug_save_image(clean_fused, f"{i}-control.png")
-            
             path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
             connected_shapes = flooded_clean - path_cnt_dilate
@@ -337,8 +333,6 @@ class Parser:
             cv2.floodFill(connected_shapes_f, None, (0,0), 100, 10, 10)
             connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
-
-            self.debug_save_image(connected_shapes_clean, f"{i}-connections-fix.png")
 
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
@@ -390,8 +384,6 @@ class Parser:
 
         connections = self.get_connections(path_contours, self.get_no_hole_shapes(shapes), masks)
 
-        print(connections)
-
         for k in connections.keys():
             for i, si in enumerate(connections[k]):
                 for j, sj in enumerate(connections[k]):
@@ -420,8 +412,6 @@ class Parser:
                             shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                         )
 
-                        print(s_and_c_contours)
-                        
                         connecting_point = Parser.contour_center(s_and_c_contours[0])
                         connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
                         shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)
