@@ -387,7 +387,7 @@ class Parser:
         shapes = self.get_shapes(shape_contours, shape_hierarchy, masks.shape)
 
         connections = self.get_connections(path_contours, self.get_no_hole_shapes(shapes), masks)
-        # print(connections)
+
         for k in connections.keys():
             for i, si in enumerate(connections[k]):
                 for j, sj in enumerate(connections[k]):
@@ -415,9 +415,7 @@ class Parser:
                         s_and_c_t_contours, _ = cv2.findContours(
                             shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                         )
-                        self.debug_save_image(shape_and_con, f"{k}-cunt.png")
-                        # print(s_and_c_contours)
-                        # print(k)
+
                         connecting_point = Parser.contour_center(s_and_c_contours[0])
                         connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
                         shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)
