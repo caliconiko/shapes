@@ -335,8 +335,6 @@ class Parser:
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
             connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
 
-            self.debug_save_image(connected_shapes_clean, f"{i}-clean.png")
-
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
             )
