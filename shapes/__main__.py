@@ -16,7 +16,7 @@ def main():
     
     if args.profile:
         print("|profiling...|")
-        cProfile.runctx("Parser(args.path, args.debug).parse_shapes()", globals(), locals())
+        cProfile.runctx("Parser(args.path, args.debug).parse_shapes()", globals(), locals(), sort="tottime")
         print("|profiled!|")
         exit()
         
