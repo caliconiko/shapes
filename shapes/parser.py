@@ -322,12 +322,13 @@ class Parser:
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
             flooded_clean = cv2.bitwise_and(flooded_clean, clean_fused)
 
-            self.debug_save_image(flooded_clean, f"{i}-floooood.png")
             self.debug_save_image(clean_fused, f"{i}-control.png")
             
             path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
             connected_shapes = flooded_clean - path_cnt_dilate
+
+            self.debug_save_image(connected_shapes, f"{i}-connections-fix.png")
 
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
