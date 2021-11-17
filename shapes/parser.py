@@ -299,6 +299,12 @@ class Parser:
         shape_tree = KDTree(shape_circles_list)
 
         real_back = cv2.bitwise_not(cv2.bitwise_or(masks.shape, masks.path))
+        back_only_flood = real_back.copy()
+        cv2.floodFill(back_only_flood, None, (0,0), 0)[1]
+        back_only = cv2.bitwise_xor(back_only_flood, real_back)
+        shapes_or_path_no_holes = cv2.bitwise_not(back_only)
+
+        self.debug_save_image(back_only, "back_only.png")
 
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
@@ -320,7 +326,7 @@ class Parser:
             flooded_clean = Parser.clean(flooded_final)
             flooded_clean = Parser.dilate(flooded_clean)
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
-            flooded_clean = cv2.bitwise_and(flooded_clean, clean_fused)
+            flooded_clean = cv2.bitwise_and(flooded_clean, shapes_or_path_no_holes)
 
             self.debug_save_image(clean_fused, f"{i}-control.png")
             
@@ -409,6 +415,9 @@ class Parser:
                         s_and_c_t_contours, _ = cv2.findContours(
                             shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                         )
+
+                        print(s_and_c_contours)
+                        
                         connecting_point = Parser.contour_center(s_and_c_contours[0])
                         connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
                         shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)
