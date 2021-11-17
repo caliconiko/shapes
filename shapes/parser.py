@@ -138,9 +138,14 @@ class Parser:
         return mask_map
 
     @staticmethod
-    def clean_holes(img, kernel_size=2):
+    def clean_holes(img, kernel_size=2, iters=1):
         kernel = np.ones((kernel_size, kernel_size), np.uint8)
-        return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+        return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel, iterations=iters)
+
+    @staticmethod
+    def clean(img, kernel_size=2):
+        kernel = np.ones((kernel_size, kernel_size), np.uint8)
+        return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
 
     @staticmethod
     def get_circles(img):
@@ -312,9 +317,12 @@ class Parser:
             flooded_ranged = cv2.inRange(flooded, 100, 100)
             flooded_sub = flooded_ranged - real_back
             flooded_final = flooded_sub - all_except
+            flooded_clean = Parser.clean(flooded_final)
+            flooded_clean = Parser.dilate(flooded_clean)
+            flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
+            flooded_clean = cv2.bitwise_and(flooded_clean, clean_fused)
 
-            self.debug_save_image(flooded_final, f"{i}-floooood.png")
-            self.debug_save_image(flooded_ranged, f"{i}-flood.png")
+            self.debug_save_image(flooded_clean, f"{i}-floooood.png")
             self.debug_save_image(clean_fused, f"{i}-control.png")
 
 
