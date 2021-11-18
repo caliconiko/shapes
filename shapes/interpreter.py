@@ -338,7 +338,7 @@ class Interpreter:
                     self.current = nearest[0]
                     self.p_point = nearest[1]
                 case ShapeEnum.END:
-                    print("|finished|")
+                    print("--------------|finished|--------------")
                     exit()
                 
                 case ShapeEnum.ANY:
