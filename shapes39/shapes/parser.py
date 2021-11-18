@@ -306,17 +306,22 @@ class Parser:
 
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
+            path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
+            path_cnt_dilate_big = Parser.dilate(path_cnt_mask, 6)
+            shape_mask_erode = Parser.erode(masks.shape, 2)
+
             fused = cv2.bitwise_or(path_cnt_mask, masks.shape)
             clean_fused = Parser.clean_holes(fused)
 
-            fused_contours, _ = cv2.findContours(
-                clean_fused, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
-            )
-
             all_except = cv2.bitwise_xor(masks.path, path_cnt_mask)
-            
+
+            intersection = cv2.bitwise_and(path_cnt_dilate_big, shape_mask_erode)
+            intersect_ind = np.where(intersection==255)
+            intersect_coords = list(zip(intersect_ind[1], intersect_ind[0]))
+
             flooded = clean_fused.copy()
-            [cv2.floodFill(flooded, None, cnt[rand_i][0], 100) for rand_i in np.random.choice(range(len(cnt)), 5)]
+            for int_i in range(len(intersect_coords))[:1]:
+                cv2.floodFill(flooded, None, intersect_coords[int_i], 100)
 
             flooded_ranged = cv2.inRange(flooded, 100, 100)
             flooded_sub = flooded_ranged - real_back
@@ -325,8 +330,6 @@ class Parser:
             flooded_clean = Parser.dilate(flooded_clean)
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
             flooded_clean = cv2.bitwise_and(flooded_clean, shapes_or_path_no_holes)
-
-            path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
 
             connected_shapes = flooded_clean - path_cnt_dilate
             connected_shapes_f = connected_shapes.copy()
