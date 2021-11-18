@@ -313,31 +313,20 @@ class Parser:
             fused = cv2.bitwise_or(path_cnt_mask, masks.shape)
             clean_fused = Parser.clean_holes(fused)
 
-            self.debug_save_image(clean_fused, f"{i}-control.png")
-
             all_except = cv2.bitwise_xor(masks.path, path_cnt_mask)
 
             intersection = cv2.bitwise_and(path_cnt_dilate_big, shape_mask_erode)
             intersect_ind = np.where(intersection==255)
             intersect_coords = list(zip(intersect_ind[1], intersect_ind[0]))
-            print(intersect_coords)
 
-            self.debug_save_image(intersection, f"{i}-intersect.png")
-
-            flooded_check = clean_fused.copy()
-            
             flooded = clean_fused.copy()
             for int_i in range(len(intersect_coords))[:1]:
                 cv2.floodFill(flooded, None, intersect_coords[int_i], 100)
-                flooded_check[intersect_coords[int_i][1],intersect_coords[int_i][0]] = 100
-
-            self.debug_save_image(flooded_check, f"{i}-check.png")
 
             flooded_ranged = cv2.inRange(flooded, 100, 100)
             flooded_sub = flooded_ranged - real_back
             flooded_final = flooded_sub - all_except
             flooded_clean = Parser.clean(flooded_final)
-            self.debug_save_image(flooded, f"{i}-flood.png")
             flooded_clean = Parser.dilate(flooded_clean)
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
             flooded_clean = cv2.bitwise_and(flooded_clean, shapes_or_path_no_holes)
@@ -348,8 +337,6 @@ class Parser:
             connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
             connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
-
-            self.debug_save_image(connected_shapes_clean, f"{i}-conn.png")
 
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
