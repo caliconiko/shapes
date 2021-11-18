@@ -338,7 +338,7 @@ class Interpreter:
                 self.current = nearest[0]
                 self.p_point = nearest[1]
             elif shape_type == ShapeEnum.END:
-                print("--------------|finished|--------------")
+                print("|finished|")
                 exit()
             
             elif shape_type == ShapeEnum.ANY:

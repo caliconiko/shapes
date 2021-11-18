@@ -23,7 +23,6 @@ class Parser:
         if len(self.get_image_colors(self.img)) < 2:
             raise ParserError("Wtf are you trying to do?")
         self.imgray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        self.zeros = np.zeros(self.imgray.shape, np.uint8)
         self.home_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
         self.debug = debug
 
@@ -51,7 +50,7 @@ class Parser:
         cv2.imwrite(self.get_path("debugging/"+name), src)
 
     def get_color_ranges_mask(self, colors, img):
-        c_range_sum =self.zeros
+        c_range_sum = np.zeros(self.imgray.shape, np.uint8)
         for i in range(len(colors) - 1):
             c_range = cv2.inRange(img, colors[i], colors[i + 1])
             c_range_sum = cv2.bitwise_or(c_range_sum, c_range)
@@ -65,7 +64,7 @@ class Parser:
         return c_range_sum
 
     def get_color_ranges_mask2(self, colors, img):
-        c_range_sum = self.zeros
+        c_range_sum = np.zeros(self.imgray.shape, np.uint8)
         for i in range(len(colors)):
             c_range = cv2.inRange(img, colors[i], colors[i])
             c_range_sum = cv2.bitwise_or(c_range_sum, c_range)
@@ -134,8 +133,7 @@ class Parser:
             self.debug_save_image(path_mask_cleaned, "path.png")
             self.debug_save_image(bg_mask, "back.png")
 
-        masks = {"shape": shape_mask_cleaned, "path": path_mask_cleaned, "bg": bg_mask, 
-                 "shape_zeros": np.zeros(shape_mask_cleaned.shape, np.uint8), "path_zeros": np.zeros(path_mask_cleaned.shape, np.uint8)}
+        masks = {"shape": shape_mask_cleaned, "path": path_mask_cleaned, "bg": bg_mask}
         mask_map = DotMap(masks)
         return mask_map
 
@@ -170,7 +168,7 @@ class Parser:
         return circles
 
     @staticmethod
-    def crop_contour(cnt, img, mask_start=None):
+    def crop_contour(cnt, img):
         _, _, width, height = cv2.boundingRect(cnt)
 
         cnt_list = []
@@ -181,16 +179,13 @@ class Parser:
         cnt_list = np.array(cnt_list)
 
         cnt_list = cnt_list - cnt_list.min(axis=0)
-        if mask_start is None:
-            mask = np.zeros(img.shape, np.uint8)
-        else:
-            mask = mask_start.copy()
+        mask = np.zeros(img.shape, np.uint8)
         cv2.drawContours(mask, [cnt_list], -1, (255, 255, 255), -1, cv2.LINE_AA)
 
         return mask[0:height, 1:width]
 
     @staticmethod
-    def mask_contour(cnt, img, mask_start=None):
+    def mask_contour(cnt, img):
         cnt_list = []
 
         for p in cnt:
@@ -198,19 +193,16 @@ class Parser:
 
         cnt_list = np.array(cnt_list)
 
-        if mask_start is None:
-            mask = np.zeros(img.shape, np.uint8)
-        else:
-            mask = mask_start.copy()
+        mask = np.zeros(img.shape, np.uint8)
         cv2.drawContours(mask, [cnt_list], -1, (255, 255, 255), -1)
 
         return mask
 
     @staticmethod
-    def check_is_circle(cnt, img, i, mask_start=None):
+    def check_is_circle(cnt, img, i):
         _, _, width, height = cv2.boundingRect(cnt)
 
-        cropped = Parser.crop_contour(cnt, img, mask_start)
+        cropped = Parser.crop_contour(cnt, img)
 
         rect = cv2.minAreaRect(cnt)
 
@@ -220,7 +212,7 @@ class Parser:
             cropped2, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
 
-        cropped2 = Parser.crop_contour(contours_rot[0], cropped2, mask_start)
+        cropped2 = Parser.crop_contour(contours_rot[0], cropped2)
 
         width_cr, height_cr = cropped.shape
 
@@ -313,7 +305,7 @@ class Parser:
         shapes_or_path_no_holes = cv2.bitwise_not(back_only)
 
         for i, cnt in enumerate(path_contours):
-            path_cnt_mask = Parser.mask_contour(cnt, masks.path, masks.path_zeros)
+            path_cnt_mask = Parser.mask_contour(cnt, masks.path)
             fused = cv2.bitwise_or(path_cnt_mask, masks.shape)
             clean_fused = Parser.clean_holes(fused)
 
@@ -399,17 +391,17 @@ class Parser:
                 for j, sj in enumerate(connections[k]):
                     if si != sj:
                         shape_and_con = cv2.bitwise_and(
-                            Parser.mask_contour(shapes[si].contour, masks.shape, masks.shape_zeros),
+                            Parser.mask_contour(shapes[si].contour, masks.shape),
                             Parser.dilate(
-                                Parser.mask_contour(path_contours[k], masks.path, masks.path_zeros),
+                                Parser.mask_contour(path_contours[k], masks.path),
                                 kernel_size=5,
                             ),
                         )
 
                         shape_and_con_to = cv2.bitwise_and(
-                            Parser.mask_contour(shapes[sj].contour, masks.shape, masks.shape_zeros),
+                            Parser.mask_contour(shapes[sj].contour, masks.shape),
                             Parser.dilate(
-                                Parser.mask_contour(path_contours[k], masks.path, masks.path_zeros),
+                                Parser.mask_contour(path_contours[k], masks.path),
                                 kernel_size=5,
                             ),
                         )
