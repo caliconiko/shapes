@@ -37,7 +37,7 @@ class ShapeEnum(Enum):
 
     IN = auto()
     OUT = auto()
-
+    OUT_NO_LF = auto() 
 
 class Shape:
     def __init__(
@@ -86,6 +86,7 @@ class Shape:
             ((2, False), False): ShapeEnum.LENGTH,
             ((7, False), False): ShapeEnum.IN,
             ((6, True), False): ShapeEnum.OUT,
+            ((6, True), 1): ShapeEnum.OUT_NO_LF,
         }
         # [[shape sides, is_convex], [hole shapes]]
 

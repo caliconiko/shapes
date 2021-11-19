@@ -93,6 +93,14 @@ class Interpreter:
                         print()
                     self.default_next()
 
+                case ShapeEnum.OUT_NO_LF:
+                    if len(self.stack)>0:
+                        val = self.stack.pop()
+
+                        print(val, end='')
+
+                    self.default_next()
+
                 case ShapeEnum.CONTAINER:
                     if self.current.value is not None:
                         self.stack.append(self.current.value)
@@ -333,11 +341,13 @@ class Interpreter:
                             nearest = m
 
                     if nearest is None:
+                        print()
                         print("|finished due to dead-end|")
                         exit()
                     self.current = nearest[0]
                     self.p_point = nearest[1]
                 case ShapeEnum.END:
+                    print()
                     print("--------------|finished|--------------")
                     exit()
                 
