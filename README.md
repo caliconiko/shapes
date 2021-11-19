@@ -47,3 +47,5 @@ Soon™:
 * Better shape classification
 * Better docs
 * Functionoid path enviornments
+
+> Star this repo if you like my esolang :)
