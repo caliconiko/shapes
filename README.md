@@ -35,3 +35,10 @@ Hello, World!
 
 Truth machine
 ![](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
+
+## Shapes...
+
+Soon™:
+* Better shape classification
+* Better docs
+* Functionoid path enviornments
