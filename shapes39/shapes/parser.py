@@ -83,7 +83,9 @@ class Parser:
         return img_copy
 
     def get_masks(self):
-        (img_width, img_height, _) = self.img.shape
+        (img_height, img_width, _) = self.img.shape
+
+        print(self.img.shape)
 
         bottom_edge = self.img[img_height - 1, 0 : img_width - 1]
 
@@ -127,11 +129,6 @@ class Parser:
 
         path_mask_cleaned = self.clean_contours_touching_edges(path_mask)
         path_mask_cleaned = Parser.clean_holes(path_mask_cleaned)
-
-        if self.debug:
-            self.debug_save_image(shape_mask_cleaned, "shape.png")
-            self.debug_save_image(path_mask_cleaned, "path.png")
-            self.debug_save_image(bg_mask, "back.png")
 
         masks = {"shape": shape_mask_cleaned, "path": path_mask_cleaned, "bg": bg_mask}
         mask_map = DotMap(masks)
@@ -206,6 +203,8 @@ class Parser:
 
         rect = cv2.minAreaRect(cnt)
 
+        print(np.shape(cropped[0:height, 1:width]))
+
         cropped2 = imutils.rotate_bound(cropped[0:height, 1:width], rect[2] - 90)
 
         contours_rot, _ = cv2.findContours(
@@ -230,8 +229,8 @@ class Parser:
 
         roughness = perimeter / hull_perimeter
 
-        # cv2.imwrite(f"cropped/{i}a.png", cropped)
-        # cv2.imwrite(f"cropped/{i}.png", cropped2)
+        cv2.imwrite(f"debugging/{i}a.png", cropped)
+        cv2.imwrite(f"debugging/{i}.png", cropped2)
 
         return (circles2 is not None or circles is not None) and roughness < 2
 
@@ -376,6 +375,11 @@ class Parser:
 
     def parse_shapes(self):
         masks = self.get_masks()
+
+        if self.debug:
+            self.debug_save_image(masks.shape, "shape.png")
+            self.debug_save_image(masks.path, "path.png")
+            self.debug_save_image(masks.bg, "back.png")
 
         shape_contours, shape_hierarchy = cv2.findContours(
             masks.shape, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE

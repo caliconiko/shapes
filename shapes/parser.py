@@ -83,7 +83,7 @@ class Parser:
         return img_copy
 
     def get_masks(self):
-        (img_width, img_height, _) = self.img.shape
+        (img_height, img_width, _) = self.img.shape
 
         bottom_edge = self.img[img_height - 1, 0 : img_width - 1]
 
@@ -94,9 +94,6 @@ class Parser:
         bg_range_sum = self.get_color_ranges_mask(bg_colors, self.img)
 
         bg_mask = cv2.bitwise_not(bg_range_sum)
-
-        # bg_masked_img = cv2.bitwise_and(self.img, self.img, mask=bg_mask)
-        # leaving this here to remember how to do this
 
         left_edge = self.img[0 : img_height - 1, 0]
         right_edge = self.img[0 : img_height - 1, img_width - 1]
@@ -200,7 +197,7 @@ class Parser:
 
     @staticmethod
     def check_is_circle(cnt, img, i):
-        _, _, width, height = cv2.boundingRect(cnt)
+        _, _, height, width = cv2.boundingRect(cnt)
 
         cropped = Parser.crop_contour(cnt, img)
 
@@ -376,6 +373,11 @@ class Parser:
 
     def parse_shapes(self):
         masks = self.get_masks()
+
+        if self.debug:
+            self.debug_save_image(masks.shape, "shape.png")
+            self.debug_save_image(masks.path, "path.png")
+            self.debug_save_image(masks.bg, "back.png")
 
         shape_contours, shape_hierarchy = cv2.findContours(
             masks.shape, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
