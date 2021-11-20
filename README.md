@@ -25,6 +25,11 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
   ```
   python -m shapes "path\to\program.png"
   ```
+> With 3.9, do
+> ```
+> python -m shapes39.shapes "path\to\program.png"
+> ```
+
 * For more options and or thingies, do
   ```
   python -m shapes --help
@@ -35,3 +40,14 @@ Hello, World!
 
 Truth machine
 ![](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
+
+## Shapes...
+
+Soon™:
+* Better shape classification
+* Better docs
+* Functionoid path enviornments
+
+-------
+
+> Star this repo if you like my esolang :)
