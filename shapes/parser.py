@@ -227,9 +227,6 @@ class Parser:
 
         roughness = perimeter / hull_perimeter
 
-        # cv2.imwrite(f"cropped/{i}a.png", cropped)
-        # cv2.imwrite(f"cropped/{i}.png", cropped2)
-
         return (circles2 is not None or circles is not None) and roughness < 2
 
     @staticmethod
@@ -251,7 +248,15 @@ class Parser:
 
             shape = None
 
-            if Parser.check_is_circle(cnt, mask, i):
+            is_circle = False
+            
+            try:
+                is_circle = Parser.check_is_circle(cnt, mask, i)
+            except Exception as e:
+                if self.debug:
+                    print(f"|exception {e} while parsing|")
+
+            if is_circle:
                 shape = Shape(cnt, True, center=Parser.contour_center(approx))
                 shape.points = approx
                 if self.debug:
@@ -380,11 +385,11 @@ class Parser:
             self.debug_save_image(masks.bg, "back.png")
 
         shape_contours, shape_hierarchy = cv2.findContours(
-            masks.shape, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+            Parser.clean(masks.shape), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
 
         path_contours, _ = cv2.findContours(
-            masks.path, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+            Parser.clean(masks.path), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
 
         shapes = self.get_shapes(shape_contours, shape_hierarchy, masks.shape)
