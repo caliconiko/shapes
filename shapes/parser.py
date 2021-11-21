@@ -102,6 +102,7 @@ class Parser:
 
         shape_colors = []
         path_colors = []
+
         for c in edge_colors[0]:
             if not (bg_colors == c).all(axis=1).any():
                 shape_colors.append(c)
@@ -116,6 +117,11 @@ class Parser:
             if len(g) < 1:
                 raise ParserError("Shape colors or path colors not specified")
 
+        if self.debug:
+            print(f"|background colors: {bg_colors}|")
+            print(f"|shape colors: {shape_colors}|")
+            print(f"|path colors: {path_colors}|")
+
         shape_mask = self.get_color_ranges_mask(shape_colors, self.img)
         path_mask = self.get_color_ranges_mask(path_colors, self.img)
 
@@ -123,6 +129,14 @@ class Parser:
         shape_mask_cleaned = Parser.clean_holes(shape_mask_cleaned)
 
         path_mask_cleaned = self.clean_contours_touching_edges(path_mask)
+        path_mask_cleaned = Parser.clean_holes(path_mask_cleaned)
+
+        path_mask_cleaned = path_mask_cleaned - shape_mask_cleaned
+
+        shape_mask_cleaned = Parser.clean(shape_mask_cleaned)
+        shape_mask_cleaned = Parser.clean_holes(shape_mask_cleaned)
+
+        path_mask_cleaned = Parser.clean(path_mask_cleaned)
         path_mask_cleaned = Parser.clean_holes(path_mask_cleaned)
 
         if self.debug:
@@ -333,12 +347,16 @@ class Parser:
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
             flooded_clean = cv2.bitwise_and(flooded_clean, shapes_or_path_no_holes)
 
+            self.debug_save_image(flooded_clean, f"{i}-floood.png")
+
             connected_shapes = flooded_clean - path_cnt_dilate
             connected_shapes_f = connected_shapes.copy()
             cv2.floodFill(connected_shapes_f, None, (0,0), 100, 10, 10)
             connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
             connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
+
+            self.debug_save_image(connected_shapes_clean, f"{i}-connecteds.png")
 
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
@@ -385,11 +403,11 @@ class Parser:
             self.debug_save_image(masks.bg, "back.png")
 
         shape_contours, shape_hierarchy = cv2.findContours(
-            Parser.clean(masks.shape), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+            masks.shape, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
 
         path_contours, _ = cv2.findContours(
-            Parser.clean(masks.path), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
+            masks.path, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
         )
 
         shapes = self.get_shapes(shape_contours, shape_hierarchy, masks.shape)
