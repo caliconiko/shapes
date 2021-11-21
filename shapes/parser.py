@@ -131,20 +131,29 @@ class Parser:
         path_mask_cleaned = self.clean_contours_touching_edges(path_mask)
         path_mask_cleaned = Parser.clean_holes(path_mask_cleaned)
 
-        path_mask_cleaned = path_mask_cleaned - shape_mask_cleaned
+        self.debug_save_image(cv2.bitwise_or(shape_mask_cleaned, path_mask_cleaned), "hmm.png")
+
+        path_mask_cleaned_sub = path_mask_cleaned - shape_mask_cleaned
+        path_mask_cleaned_sub = cv2.inRange(path_mask_cleaned_sub, 255, 255)
+
+        self.debug_save_image(cv2.bitwise_xor(path_mask_cleaned, path_mask_cleaned_sub), "hmmmmmm.png")
 
         shape_mask_cleaned = Parser.clean(shape_mask_cleaned)
         shape_mask_cleaned = Parser.clean_holes(shape_mask_cleaned)
 
-        path_mask_cleaned = Parser.clean(path_mask_cleaned)
-        path_mask_cleaned = Parser.clean_holes(path_mask_cleaned)
+        path_mask_cleaned_sub = Parser.clean(path_mask_cleaned_sub)
+        path_mask_cleaned_sub = Parser.clean_holes(path_mask_cleaned_sub)
+
+        print(f"path: {np.unique(path_mask_cleaned)}")
+        print(f"shap: {np.unique(shape_mask_cleaned)}")
+        print(f"sub: {np.unique(path_mask_cleaned_sub)}")
 
         if self.debug:
             self.debug_save_image(shape_mask_cleaned, "shape.png")
-            self.debug_save_image(path_mask_cleaned, "path.png")
+            self.debug_save_image(path_mask_cleaned_sub, "path.png")
             self.debug_save_image(bg_mask, "back.png")
 
-        masks = {"shape": shape_mask_cleaned, "path": path_mask_cleaned, "bg": bg_mask}
+        masks = {"shape": shape_mask_cleaned, "path": path_mask_cleaned_sub, "bg": bg_mask}
         mask_map = DotMap(masks)
         return mask_map
 
@@ -316,9 +325,18 @@ class Parser:
 
         real_back = cv2.bitwise_not(cv2.bitwise_or(masks.shape, masks.path))
         back_only_flood = real_back.copy()
+
         cv2.floodFill(back_only_flood, None, (0,0), 0)[1]
         back_only = cv2.bitwise_xor(back_only_flood, real_back)
         shapes_or_path_no_holes = cv2.bitwise_not(back_only)
+
+        real_back_shape = cv2.bitwise_not(masks.shape,)
+        back_only_flood_shape = real_back_shape.copy()
+        cv2.floodFill(back_only_flood_shape, None, (0,0), 0)[1]
+        shapes_no_holes = cv2.bitwise_xor(back_only_flood_shape, real_back_shape)
+        shapes_no_holes = cv2.bitwise_not(shapes_no_holes)
+
+        self.debug_save_image(shapes_no_holes, "shapes_no_hole.png")
 
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
@@ -335,6 +353,8 @@ class Parser:
             intersect_ind = np.where(intersection==255)
             intersect_coords = list(zip(intersect_ind[1], intersect_ind[0]))
 
+            self.debug_save_image(path_cnt_mask, f"{i}-path.png")
+
             flooded = clean_fused.copy()
             for int_i in range(len(intersect_coords))[:1]:
                 cv2.floodFill(flooded, None, intersect_coords[int_i], 100)
@@ -345,7 +365,7 @@ class Parser:
             flooded_clean = Parser.clean(flooded_final)
             flooded_clean = Parser.dilate(flooded_clean)
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
-            flooded_clean = cv2.bitwise_and(flooded_clean, shapes_or_path_no_holes)
+            flooded_clean = cv2.bitwise_and(flooded_clean, shapes_no_holes)
 
             self.debug_save_image(flooded_clean, f"{i}-floood.png")
 
