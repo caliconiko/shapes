@@ -20,7 +20,7 @@ class Interpreter:
     def get_start(self) -> Shape:
         starts = []
         for s in self.shapes:
-            if s.get_shape_type() == ShapeEnum.START:
+            if s.get_shape_type() == ShapeEnum.START and s.outer is None:
                 starts.append(s)
         if len(starts)<1:
             raise InterpreterError("No start found")

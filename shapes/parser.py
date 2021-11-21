@@ -135,7 +135,7 @@ class Parser:
         path_mask_cleaned_sub = cv2.inRange(path_mask_cleaned_sub, 255, 255)
 
         shape_mask_cleaned = Parser.clean(shape_mask_cleaned)
-        shape_mask_cleaned = Parser.clean_holes(shape_mask_cleaned)
+        shape_mask_cleaned = Parser.clean_holes(shape_mask_cleaned, iters=2)
 
         path_mask_cleaned_sub = Parser.clean(path_mask_cleaned_sub)
         path_mask_cleaned_sub = Parser.clean_holes(path_mask_cleaned_sub)
@@ -334,7 +334,7 @@ class Parser:
             path_cnt_dilate_big = Parser.dilate(path_cnt_mask, 6)
             shape_mask_erode = Parser.erode(masks.shape, 2)
 
-            fused = cv2.bitwise_or(path_cnt_mask, masks.shape)
+            fused = cv2.bitwise_or(path_cnt_dilate, masks.shape)
             clean_fused = Parser.clean_holes(fused)
 
             all_except = cv2.bitwise_xor(masks.path, path_cnt_mask)
@@ -361,6 +361,9 @@ class Parser:
             connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
             connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
+
+            self.debug_save_image(connected_shapes_clean, f"{i}-conn.png")
+            self.debug_save_image(clean_fused, f"{i}-fused.png")
 
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
@@ -446,11 +449,16 @@ class Parser:
                             shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                         )
 
-                        connecting_point = Parser.contour_center(s_and_c_contours[0])
-                        connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
-                        shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)
-                        if self.debug:
-                            cv2.circle(self.debug_out, connecting_point_to, 40, (0,0,255))
+
+                        try:
+                            connecting_point = Parser.contour_center(s_and_c_contours[0])
+                            connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
+                            shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)
+                            if self.debug:
+                                cv2.circle(self.debug_out, connecting_point_to, 20, (0,0,255))
+                        except Exception as e:
+                            print(e)
+                            self.debug_save_image(shape_and_con_to, "problem.png")
 
         if self.debug:
             for s in shapes:
