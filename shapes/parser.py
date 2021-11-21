@@ -131,22 +131,14 @@ class Parser:
         path_mask_cleaned = self.clean_contours_touching_edges(path_mask)
         path_mask_cleaned = Parser.clean_holes(path_mask_cleaned)
 
-        self.debug_save_image(cv2.bitwise_or(shape_mask_cleaned, path_mask_cleaned), "hmm.png")
-
         path_mask_cleaned_sub = path_mask_cleaned - shape_mask_cleaned
         path_mask_cleaned_sub = cv2.inRange(path_mask_cleaned_sub, 255, 255)
-
-        self.debug_save_image(cv2.bitwise_xor(path_mask_cleaned, path_mask_cleaned_sub), "hmmmmmm.png")
 
         shape_mask_cleaned = Parser.clean(shape_mask_cleaned)
         shape_mask_cleaned = Parser.clean_holes(shape_mask_cleaned)
 
         path_mask_cleaned_sub = Parser.clean(path_mask_cleaned_sub)
         path_mask_cleaned_sub = Parser.clean_holes(path_mask_cleaned_sub)
-
-        print(f"path: {np.unique(path_mask_cleaned)}")
-        print(f"shap: {np.unique(shape_mask_cleaned)}")
-        print(f"sub: {np.unique(path_mask_cleaned_sub)}")
 
         if self.debug:
             self.debug_save_image(shape_mask_cleaned, "shape.png")
@@ -283,7 +275,7 @@ class Parser:
                 shape = Shape(cnt, True, center=Parser.contour_center(approx))
                 shape.points = approx
                 if self.debug:
-                    cv2.drawContours(self.debug_out, [cnt], -1, (0, 0, 255), thickness=10)
+                    cv2.drawContours(self.debug_out, [cnt], -1, (0, 0, 255), thickness=5)
             else:
                 shape = Shape(cnt, False, center=Parser.contour_center(approx))
                 shape.points = approx
@@ -336,8 +328,6 @@ class Parser:
         shapes_no_holes = cv2.bitwise_xor(back_only_flood_shape, real_back_shape)
         shapes_no_holes = cv2.bitwise_not(shapes_no_holes)
 
-        self.debug_save_image(shapes_no_holes, "shapes_no_hole.png")
-
         for i, cnt in enumerate(path_contours):
             path_cnt_mask = Parser.mask_contour(cnt, masks.path)
             path_cnt_dilate = Parser.dilate(path_cnt_mask, 2)
@@ -353,8 +343,6 @@ class Parser:
             intersect_ind = np.where(intersection==255)
             intersect_coords = list(zip(intersect_ind[1], intersect_ind[0]))
 
-            self.debug_save_image(path_cnt_mask, f"{i}-path.png")
-
             flooded = clean_fused.copy()
             for int_i in range(len(intersect_coords))[:1]:
                 cv2.floodFill(flooded, None, intersect_coords[int_i], 100)
@@ -367,16 +355,12 @@ class Parser:
             flooded_clean = Parser.clean_holes(flooded_clean, 16, 2)
             flooded_clean = cv2.bitwise_and(flooded_clean, shapes_no_holes)
 
-            self.debug_save_image(flooded_clean, f"{i}-floood.png")
-
             connected_shapes = flooded_clean - path_cnt_dilate
             connected_shapes_f = connected_shapes.copy()
             cv2.floodFill(connected_shapes_f, None, (0,0), 100, 10, 10)
             connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
             connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
-
-            self.debug_save_image(connected_shapes_clean, f"{i}-connecteds.png")
 
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
@@ -484,11 +468,11 @@ class Parser:
                     self.debug_save_image(self.debug_out, "seen.png")
                     cv2.putText(
                         self.debug_out,
-                        f"{s.get_shape_type().name}",
+                        f"{s.get_shape_type().name}{[len(h.points) for h in s.get_holes()]}",
                         Parser.contour_avg(s.contour),
                         cv2.FONT_HERSHEY_PLAIN,
                         2,
-                        (0, 0, 0),
+                        (128, 128, 128),
                         2,
                     )
                 for k in s.connecteds.keys():

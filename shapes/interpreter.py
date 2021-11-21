@@ -196,7 +196,7 @@ class Interpreter:
                             try:
                                 self.stack.append(float(val))
                             except ValueError:
-                                self.stack.append(inp)
+                                self.stack.append(val)
 
                     self.default_next()
 
@@ -215,7 +215,12 @@ class Interpreter:
                             self.stack.append(b)
                             self.stack.append(a)
 
-                        match len(self.current.get_holes()):
+                        holes = self.current.get_holes()
+
+                        if self.verbose:
+                            print(f"|operation shape code: {len(holes)}|")
+
+                        match len(holes):
                             case 1:
                                 if _both_is_num():
                                     self.stack.append(a+b)
