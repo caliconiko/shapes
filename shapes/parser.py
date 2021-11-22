@@ -440,39 +440,15 @@ class Parser:
                             dilated_path,
                         )
 
-                        s_and_c_contours, _ = cv2.findContours(
-                            shape_and_con, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
-                        )
+                        shape_and_con_where = np.where(shape_and_con==255)
+                        shape_and_con_avg = [round(np.average(w)) for w in shape_and_con_where[::-1]]
 
-                        s_and_c_t_contours, _ = cv2.findContours(
-                            shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
-                        )
+                        shape_and_con_to_where = np.where(shape_and_con_to==255)
+                        shape_and_con_to_avg = [round(np.average(w)) for w in shape_and_con_to_where[::-1]]
 
-                        # TODO: Remove findCountours usage here by replacing it with something that 
-                        # finds all white pixels and and averaging their locations
-
-
-                        try:
-                            connecting_point = Parser.contour_center(s_and_c_contours[0])
-                            connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
-                            shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)
-                            if self.debug:
-                                cv2.circle(self.debug_out, connecting_point_to, 20, (0,0,255))
-                        except Exception as e:
-                            print("|whoops! a shape connection error has occured. report this on https://github.com/photon-niko/shapes/issues|")
-                            print(e)
-                            everything = Parser.mask_contour(shapes[si].contour, masks.shape)
-                            everything = cv2.bitwise_or(everything, Parser.mask_contour(shapes[sj].contour, masks.shape))
-                            everything = cv2.bitwise_or(everything, dilated_path)
-                            self.debug_save_image(shape_and_con, f"problem-{k}.png")
-                            self.debug_save_image(shape_and_con_to, "problem2.png")
-                            self.debug_save_image(
-                                dilated_path, "problem_path.png"
-                            )
-                            self.debug_save_image(everything, "problem_all.png")
-                            self.debug_save_image(Parser.mask_contour(shapes[si].contour, masks.shape), "problem_shape.png")
-                            self.debug_save_image(Parser.mask_contour(shapes[sj].contour, masks.shape), "problem_shape2.png")
-                            exit()
+                        shapes[si].connect_shape(k, shapes[sj], shape_and_con_avg, shape_and_con_to_avg)
+                        if self.debug:
+                            cv2.circle(self.debug_out, shape_and_con_to_avg, 20, (0,0,255))
 
         if self.debug:
             for s in shapes:
