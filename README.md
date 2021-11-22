@@ -1,4 +1,4 @@
-![A pseudo-quine](https://raw.githubusercontent.com/photon-niko/shapes/main/logo/Shapes.png)
+![A pseudo-quine](https://raw.githubusercontent.com/photon-niko/shapes/main/logo/Shapes.png "A pseudo-quine")
 
 # Shapes!
 
