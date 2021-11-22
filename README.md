@@ -1,3 +1,5 @@
+![pseudo-quine](https://raw.githubusercontent.com/photon-niko/shapes/main/logo/Shapes.png)
+
 # Shapes!
 
 Shapes is a graphical esolang that uses images with shapes!
