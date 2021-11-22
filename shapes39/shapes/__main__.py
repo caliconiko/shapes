@@ -31,6 +31,8 @@ def main():
     shapes = parser.parse_shapes()
     parse_end = time()
     print(f"|parsed! {round(parse_end-parse_start, 3)} seconds elapsed|")
+    if args.debug:
+        print(f"|shapes found: {[f'{s.get_shape_type().name} : {[len(h.points) for h in s.get_holes()]}' for s in shapes if s.outer is None]}|")
     print("--------------------------------------")
     t=args.time
     if args.time is None:

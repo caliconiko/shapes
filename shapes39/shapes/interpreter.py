@@ -216,6 +216,10 @@ class Interpreter:
                         self.stack.append(a)
 
                     l= len(self.current.get_holes())
+
+                    if self.verbose:
+                        print(f"|operation shape code: {l}|")
+
                     if l== 1:
                         if _both_is_num():
                             self.stack.append(a+b)
