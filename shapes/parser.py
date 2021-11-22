@@ -362,8 +362,9 @@ class Parser:
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
             connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
 
-            self.debug_save_image(connected_shapes_clean, f"{i}-conn.png")
-            self.debug_save_image(clean_fused, f"{i}-fused.png")
+            # debuggeryyyy
+            # self.debug_save_image(connected_shapes_clean, f"{i}-conn.png")
+            # self.debug_save_image(clean_fused, f"{i}-fused.png")
 
             connected_shapes_contours, _ = cv2.findContours(
                 connected_shapes_clean, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
@@ -425,20 +426,18 @@ class Parser:
             for i, si in enumerate(connections[k]):
                 for j, sj in enumerate(connections[k]):
                     if si != sj:
+                        dilated_path = Parser.dilate(
+                            Parser.mask_contour(path_contours[k], masks.path),
+                            kernel_size=10,
+                        )
                         shape_and_con = cv2.bitwise_and(
                             Parser.mask_contour(shapes[si].contour, masks.shape),
-                            Parser.dilate(
-                                Parser.mask_contour(path_contours[k], masks.path),
-                                kernel_size=5,
-                            ),
+                            dilated_path,
                         )
 
                         shape_and_con_to = cv2.bitwise_and(
                             Parser.mask_contour(shapes[sj].contour, masks.shape),
-                            Parser.dilate(
-                                Parser.mask_contour(path_contours[k], masks.path),
-                                kernel_size=5,
-                            ),
+                            dilated_path,
                         )
 
                         s_and_c_contours, _ = cv2.findContours(
@@ -457,8 +456,20 @@ class Parser:
                             if self.debug:
                                 cv2.circle(self.debug_out, connecting_point_to, 20, (0,0,255))
                         except Exception as e:
+                            print("|whoops! a shape connection error has occured. report this on https://github.com/photon-niko/shapes/issues|")
                             print(e)
-                            self.debug_save_image(shape_and_con_to, "problem.png")
+                            everything = Parser.mask_contour(shapes[si].contour, masks.shape)
+                            everything = cv2.bitwise_or(everything, Parser.mask_contour(shapes[sj].contour, masks.shape))
+                            everything = cv2.bitwise_or(everything, dilated_path)
+                            self.debug_save_image(shape_and_con, f"problem-{k}.png")
+                            self.debug_save_image(shape_and_con_to, "problem2.png")
+                            self.debug_save_image(
+                                dilated_path, "problem_path.png"
+                            )
+                            self.debug_save_image(everything, "problem_all.png")
+                            self.debug_save_image(Parser.mask_contour(shapes[si].contour, masks.shape), "problem_shape.png")
+                            self.debug_save_image(Parser.mask_contour(shapes[sj].contour, masks.shape), "problem_shape2.png")
+                            exit()
 
         if self.debug:
             for s in shapes:
