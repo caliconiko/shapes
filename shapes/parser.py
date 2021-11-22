@@ -448,10 +448,6 @@ class Parser:
                             shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                         )
 
-                        # TODO: Remove findCountours usage here by replacing it with something that 
-                        # finds all white pixels and and averaging their locations
-
-
                         try:
                             connecting_point = Parser.contour_center(s_and_c_contours[0])
                             connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
