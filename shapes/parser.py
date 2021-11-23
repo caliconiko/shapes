@@ -94,6 +94,7 @@ class Parser:
         bg_range_sum = self.get_color_ranges_mask(bg_colors, self.img)
 
         bg_mask = cv2.bitwise_not(bg_range_sum)
+        bg_mask = Parser.clean(bg_mask, iters=2)
 
         left_edge = self.img[0 : img_height - 1, 0]
         right_edge = self.img[0 : img_height - 1, img_width - 1]
@@ -155,9 +156,9 @@ class Parser:
         return cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel, iterations=iters)
 
     @staticmethod
-    def clean(img, kernel_size=2):
+    def clean(img, kernel_size=2, iters=1):
         kernel = np.ones((kernel_size, kernel_size), np.uint8)
-        return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+        return cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel, iterations=iters)
 
     @staticmethod
     def get_circles(img):
