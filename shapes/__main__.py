@@ -30,7 +30,6 @@ def main():
             print("|profiling...|")
             cProfile.runctx("Parser(path, args.debug).parse_shapes()", globals(), locals(), sort="tottime")
             print("|profiled!|")
-            exit()
 
         case "interpret":
             print(f"|parsing {path}...|")
