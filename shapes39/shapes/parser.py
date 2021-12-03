@@ -23,12 +23,14 @@ class Parser:
         if len(self.get_image_colors(self.img)) < 2:
             raise ParserError("Wtf are you trying to do?")
         self.imgray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        self.home_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+        self.home_path = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), os.pardir)
+        )
         self.debug = debug
 
         if not os.path.isdir(self.get_path("debugging")):
             os.mkdir(self.get_path("debugging"))
-        
+
     def get_path(self, path: str):
         return os.path.join(self.home_path, path)
 
@@ -47,7 +49,7 @@ class Parser:
         return [color_index[0][i] for i in ordered_color_index]
 
     def debug_save_image(self, src, name):
-        cv2.imwrite(self.get_path("debugging/"+name), src)
+        cv2.imwrite(self.get_path("debugging/" + name), src)
 
     def get_color_ranges_mask(self, colors, img):
         c_range_sum = np.zeros(self.imgray.shape, np.uint8)
@@ -145,7 +147,11 @@ class Parser:
             self.debug_save_image(path_mask_cleaned_sub, "path.png")
             self.debug_save_image(bg_mask, "back.png")
 
-        masks = {"shape": shape_mask_cleaned, "path": path_mask_cleaned_sub, "bg": bg_mask}
+        masks = {
+            "shape": shape_mask_cleaned,
+            "path": path_mask_cleaned_sub,
+            "bg": bg_mask,
+        }
         mask_map = DotMap(masks)
         return mask_map
 
@@ -264,7 +270,7 @@ class Parser:
             shape = None
 
             is_circle = False
-            
+
             try:
                 is_circle = Parser.check_is_circle(cnt, mask, i)
             except Exception as e:
@@ -275,11 +281,12 @@ class Parser:
                 shape = Shape(cnt, True, center=Parser.contour_center(approx))
                 shape.points = approx
                 if self.debug:
-                    cv2.drawContours(self.debug_out, [cnt], -1, (0, 0, 255), thickness=5)
+                    cv2.drawContours(
+                        self.debug_out, [cnt], -1, (0, 0, 255), thickness=5
+                    )
             else:
                 shape = Shape(cnt, False, center=Parser.contour_center(approx))
                 shape.points = approx
-
 
             shapes.append(shape)
 
@@ -293,7 +300,7 @@ class Parser:
         return shapes
 
     def get_no_hole_shapes(self, shapes):
-        no_holes ={}
+        no_holes = {}
         for i, shape in enumerate(shapes):
             if shape.outer is None:
                 no_holes[i] = shape
@@ -318,13 +325,15 @@ class Parser:
         real_back = cv2.bitwise_not(cv2.bitwise_or(masks.shape, masks.path))
         back_only_flood = real_back.copy()
 
-        cv2.floodFill(back_only_flood, None, (0,0), 0)[1]
+        cv2.floodFill(back_only_flood, None, (0, 0), 0)[1]
         back_only = cv2.bitwise_xor(back_only_flood, real_back)
         shapes_or_path_no_holes = cv2.bitwise_not(back_only)
 
-        real_back_shape = cv2.bitwise_not(masks.shape,)
+        real_back_shape = cv2.bitwise_not(
+            masks.shape,
+        )
         back_only_flood_shape = real_back_shape.copy()
-        cv2.floodFill(back_only_flood_shape, None, (0,0), 0)[1]
+        cv2.floodFill(back_only_flood_shape, None, (0, 0), 0)[1]
         shapes_no_holes = cv2.bitwise_xor(back_only_flood_shape, real_back_shape)
         shapes_no_holes = cv2.bitwise_not(shapes_no_holes)
 
@@ -340,7 +349,7 @@ class Parser:
             all_except = cv2.bitwise_xor(masks.path, path_cnt_mask)
 
             intersection = cv2.bitwise_and(path_cnt_dilate_big, shape_mask_erode)
-            intersect_ind = np.where(intersection==255)
+            intersect_ind = np.where(intersection == 255)
             intersect_coords = list(zip(intersect_ind[1], intersect_ind[0]))
 
             flooded = clean_fused.copy()
@@ -357,7 +366,7 @@ class Parser:
 
             connected_shapes = flooded_clean - path_cnt_dilate
             connected_shapes_f = connected_shapes.copy()
-            cv2.floodFill(connected_shapes_f, None, (0,0), 100, 10, 10)
+            cv2.floodFill(connected_shapes_f, None, (0, 0), 100, 10, 10)
             connected_shapes_r = cv2.inRange(connected_shapes_f, 100, 100)
             connected_shapes_clean = cv2.bitwise_not(connected_shapes_r)
             connected_shapes_clean = Parser.clean_holes(connected_shapes_clean)
@@ -398,9 +407,9 @@ class Parser:
         for p in cnt:
             cx += p[0][0]
             cy += p[0][1]
-        cx = int(cx/len(cnt))
-        cy = int(cy/len(cnt))
-        return (cx,cy)
+        cx = int(cx / len(cnt))
+        cy = int(cy / len(cnt))
+        return (cx, cy)
 
     def parse_shapes(self):
         masks = self.get_masks()
@@ -420,7 +429,9 @@ class Parser:
 
         shapes = self.get_shapes(shape_contours, shape_hierarchy, masks.shape)
 
-        connections = self.get_connections(path_contours, self.get_no_hole_shapes(shapes), masks)
+        connections = self.get_connections(
+            path_contours, self.get_no_hole_shapes(shapes), masks
+        )
 
         for k in connections.keys():
             for i, si in enumerate(connections[k]):
@@ -448,27 +459,45 @@ class Parser:
                             shape_and_con_to, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE
                         )
 
-
                         try:
-                            connecting_point = Parser.contour_center(s_and_c_contours[0])
-                            connecting_point_to = Parser.contour_center(s_and_c_t_contours[0])
-                            shapes[si].connect_shape(k, shapes[sj], connecting_point, connecting_point_to)
+                            connecting_point = Parser.contour_center(
+                                s_and_c_contours[0]
+                            )
+                            connecting_point_to = Parser.contour_center(
+                                s_and_c_t_contours[0]
+                            )
+                            shapes[si].connect_shape(
+                                k, shapes[sj], connecting_point, connecting_point_to
+                            )
                             if self.debug:
-                                cv2.circle(self.debug_out, connecting_point_to, 20, (0,0,255))
+                                cv2.circle(
+                                    self.debug_out, connecting_point_to, 20, (0, 0, 255)
+                                )
                         except Exception as e:
-                            print("|whoops! a shape connection error has occured. report this on https://github.com/photon-niko/shapes/issues|")
+                            print(
+                                "|whoops! a shape connection error has occured. report this on https://github.com/photon-niko/shapes/issues|"
+                            )
                             print(e)
-                            everything = Parser.mask_contour(shapes[si].contour, masks.shape)
-                            everything = cv2.bitwise_or(everything, Parser.mask_contour(shapes[sj].contour, masks.shape))
+                            everything = Parser.mask_contour(
+                                shapes[si].contour, masks.shape
+                            )
+                            everything = cv2.bitwise_or(
+                                everything,
+                                Parser.mask_contour(shapes[sj].contour, masks.shape),
+                            )
                             everything = cv2.bitwise_or(everything, dilated_path)
                             self.debug_save_image(shape_and_con, f"problem-{k}.png")
                             self.debug_save_image(shape_and_con_to, "problem2.png")
-                            self.debug_save_image(
-                                dilated_path, "problem_path.png"
-                            )
+                            self.debug_save_image(dilated_path, "problem_path.png")
                             self.debug_save_image(everything, "problem_all.png")
-                            self.debug_save_image(Parser.mask_contour(shapes[si].contour, masks.shape), "problem_shape.png")
-                            self.debug_save_image(Parser.mask_contour(shapes[sj].contour, masks.shape), "problem_shape2.png")
+                            self.debug_save_image(
+                                Parser.mask_contour(shapes[si].contour, masks.shape),
+                                "problem_shape.png",
+                            )
+                            self.debug_save_image(
+                                Parser.mask_contour(shapes[sj].contour, masks.shape),
+                                "problem_shape2.png",
+                            )
                             exit()
 
         if self.debug:
@@ -496,12 +525,16 @@ class Parser:
                     )
                 for k in s.connecteds.keys():
                     for i, c in enumerate(s.connecteds[k][1]):
-                        thickness = 20//(i+1)
+                        thickness = 20 // (i + 1)
                         cv2.line(
                             self.debug_out,
                             s.connecteds[k][0],
                             c[1],
-                            (100+np.random.random()*100, (255 / len(path_contours)) * k, 0),
+                            (
+                                100 + np.random.random() * 100,
+                                (255 / len(path_contours)) * k,
+                                0,
+                            ),
                             thickness,
                         )
 

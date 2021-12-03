@@ -3,6 +3,7 @@ from typing import List
 from time import sleep
 from shapes.utils import distance
 
+
 class InterpreterError(Exception):
     pass
 
@@ -11,9 +12,9 @@ class Interpreter:
     def __init__(self, shapes: List[Shape], verbose=False, time=0.3):
         self.shapes = shapes
         self.stack = []
-        self.current:None|Shape = None
+        self.current: None | Shape = None
         self.p_point = None
-        self.p_k =None
+        self.p_k = None
         self.verbose = verbose
         self.time = time
 
@@ -22,15 +23,15 @@ class Interpreter:
         for s in self.shapes:
             if s.get_shape_type() == ShapeEnum.START and s.outer is None:
                 starts.append(s)
-        if len(starts)<1:
+        if len(starts) < 1:
             raise InterpreterError("No start found")
-        if len(starts)>1:
+        if len(starts) > 1:
             raise InterpreterError("You can't have more than one start")
-        if len(starts[0].connecteds)<1:
+        if len(starts[0].connecteds) < 1:
             raise InterpreterError("Start isn't connected to anything")
-        if len(starts[0].connecteds)>1:
+        if len(starts[0].connecteds) > 1:
             raise InterpreterError("Start can't be connected to more than one shape")
-        if len(starts[0].connecteds[list(starts[0].connecteds.keys())[0]][1])>1:
+        if len(starts[0].connecteds[list(starts[0].connecteds.keys())[0]][1]) > 1:
             raise InterpreterError("Start can't be connected to more than one shape")
         return starts[0]
 
@@ -39,18 +40,18 @@ class Interpreter:
         if next_s is None:
             print("|finished due to dead-end|")
             exit()
-        self.current=next_s[0]
-        self.p_point=next_s[1]
+        self.current = next_s[0]
+        self.p_point = next_s[1]
         self.p_k = next_s[2]
 
     def check_number(self, val):
         return isinstance(val, (float, int))
 
     def both_is_num(self, x, y):
-        return self.check_number(x) and self.check_number(y) 
+        return self.check_number(x) and self.check_number(y)
 
     def neither_is_num(self, x, y):
-        return not(self.check_number(x) or self.check_number(y))
+        return not (self.check_number(x) or self.check_number(y))
 
     def push_back(self, x, y):
         self.stack.append(y)
@@ -69,8 +70,12 @@ class Interpreter:
             match self.current.get_shape_type():
                 case ShapeEnum.START:
                     # print(self.current.connecteds)
-                    self.p_point = self.current.connecteds[list(self.current.connecteds.keys())[0]][1][0][1]
-                    self.current=self.current.connecteds[list(self.current.connecteds.keys())[0]][1][0][0]
+                    self.p_point = self.current.connecteds[
+                        list(self.current.connecteds.keys())[0]
+                    ][1][0][1]
+                    self.current = self.current.connecteds[
+                        list(self.current.connecteds.keys())[0]
+                    ][1][0][0]
 
                 case ShapeEnum.IN:
                     inp = input("<<< ")
@@ -85,7 +90,7 @@ class Interpreter:
                     self.default_next()
 
                 case ShapeEnum.OUT:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         val = self.stack.pop()
 
                         print(val)
@@ -94,10 +99,10 @@ class Interpreter:
                     self.default_next()
 
                 case ShapeEnum.OUT_NO_LF:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         val = self.stack.pop()
 
-                        print(val, end='')
+                        print(val, end="")
 
                     self.default_next()
 
@@ -112,7 +117,7 @@ class Interpreter:
                 case ShapeEnum.STACK:
                     if self.verbose:
                         print(f"|current local stack: {self.current.value}|")
-                    if len(self.stack)>1:
+                    if len(self.stack) > 1:
                         top = self.stack.pop()
                         bottom = self.stack.pop()
 
@@ -146,28 +151,28 @@ class Interpreter:
                     self.default_next()
 
                 case ShapeEnum.POP:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         self.stack.pop()
                     self.default_next()
 
                 case ShapeEnum.DUPE:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         self.stack.append(self.stack[-1])
                     self.default_next()
 
                 case ShapeEnum.NUMBER_CHECK:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         val = self.stack.pop()
                         self.stack.append(int(self.check_number(val)))
                     self.default_next()
 
                 case ShapeEnum.TO_STRING:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         self.stack.append(str(self.stack.pop()))
                     self.default_next()
 
                 case ShapeEnum.TO_CHAR:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         val = self.stack.pop()
                         if isinstance(val, (float, int)):
                             self.stack.append(chr(int(val)))
@@ -176,7 +181,7 @@ class Interpreter:
                     self.default_next()
 
                 case ShapeEnum.CHR_TO_NUM:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         val = self.stack.pop()
                         if isinstance(val, str):
                             if len(val) == 1:
@@ -187,7 +192,7 @@ class Interpreter:
                     self.default_next()
 
                 case ShapeEnum.TO_NUMBER:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         val = self.stack.pop()
 
                         try:
@@ -201,7 +206,7 @@ class Interpreter:
                     self.default_next()
 
                 case ShapeEnum.OPER:
-                    if len(self.stack) >1:
+                    if len(self.stack) > 1:
                         a = self.stack.pop()
                         b = self.stack.pop()
 
@@ -209,7 +214,7 @@ class Interpreter:
                             return self.both_is_num(a, b)
 
                         def _neither_is_num():
-                            return self.neither_is_num(a,b)
+                            return self.neither_is_num(a, b)
 
                         def _push_back():
                             self.stack.append(b)
@@ -223,125 +228,125 @@ class Interpreter:
                         match len(holes):
                             case 1:
                                 if _both_is_num():
-                                    self.stack.append(a+b)
+                                    self.stack.append(a + b)
                                 elif _neither_is_num():
-                                    self.stack.append(a+b)
+                                    self.stack.append(a + b)
                                 else:
                                     _push_back()
                             case 2:
                                 if _both_is_num():
-                                    self.stack.append(a-b)
+                                    self.stack.append(a - b)
                                 else:
                                     _push_back()
                             case 3:
                                 if _both_is_num():
-                                    self.stack.append(a*b)
+                                    self.stack.append(a * b)
                                 else:
                                     _push_back()
                             case 4:
                                 if _both_is_num():
-                                    if b!=0:
-                                        self.stack.append(a/b)
+                                    if b != 0:
+                                        self.stack.append(a / b)
                                     else:
                                         self.stack.append("NaN")
                                 else:
                                     _push_back()
                             case 5:
                                 if _both_is_num():
-                                    self.stack.append(a%b)
+                                    self.stack.append(a % b)
                                 else:
                                     _push_back()
                             case 6:
-                                self.stack.append(str(a)+str(b))
+                                self.stack.append(str(a) + str(b))
                             case _:
                                 self.stack.append(a)
                                 self.stack.append(b)
                     self.default_next()
 
                 case ShapeEnum.OR:
-                    if len(self.stack)>1:
+                    if len(self.stack) > 1:
                         a = self.stack.pop()
                         b = self.stack.pop()
-                        if self.both_is_num(a,b) or self.neither_is_num(a,b):
+                        if self.both_is_num(a, b) or self.neither_is_num(a, b):
                             self.stack.append(a or b)
                         else:
-                            self.push_back(a,b)
+                            self.push_back(a, b)
 
                     self.default_next()
 
                 case ShapeEnum.AND:
-                    if len(self.stack)>1:
+                    if len(self.stack) > 1:
                         a = self.stack.pop()
                         b = self.stack.pop()
-                        if self.both_is_num(a,b) or self.neither_is_num(a,b):
+                        if self.both_is_num(a, b) or self.neither_is_num(a, b):
                             self.stack.append(a and b)
                         else:
-                            self.push_back(a,b)
+                            self.push_back(a, b)
 
                     self.default_next()
 
                 case ShapeEnum.NOT:
-                    if len(self.stack)>0:
+                    if len(self.stack) > 0:
                         val = self.stack.pop()
                         self.stack.append(int(not val))
 
                     self.default_next()
 
                 case ShapeEnum.EQUALS:
-                    if len(self.stack)>1:
+                    if len(self.stack) > 1:
                         a = self.stack.pop()
                         b = self.stack.pop()
-                        if self.both_is_num(a,b) or self.neither_is_num(a,b):
+                        if self.both_is_num(a, b) or self.neither_is_num(a, b):
                             self.stack.append(int(a == b))
                         else:
-                            self.push_back(a,b)
+                            self.push_back(a, b)
 
                     self.default_next()
 
                 case ShapeEnum.LARGER:
-                    if len(self.stack)>1:
+                    if len(self.stack) > 1:
                         a = self.stack.pop()
                         b = self.stack.pop()
-                        if self.both_is_num(a,b) or self.neither_is_num(a,b):
+                        if self.both_is_num(a, b) or self.neither_is_num(a, b):
                             self.stack.append(int(a > b))
                         else:
-                            self.push_back(a,b)
+                            self.push_back(a, b)
 
                     self.default_next()
 
                 case ShapeEnum.SMALLER:
-                    if len(self.stack)>1:
+                    if len(self.stack) > 1:
                         a = self.stack.pop()
                         b = self.stack.pop()
-                        if self.both_is_num(a,b) or self.neither_is_num(a,b):
+                        if self.both_is_num(a, b) or self.neither_is_num(a, b):
                             self.stack.append(int(a < b))
                         else:
-                            self.push_back(a,b)
+                            self.push_back(a, b)
 
                     self.default_next()
 
                 case ShapeEnum.LENGTH:
                     self.stack.append(len(self.stack))
                     self.default_next()
-                
+
                 case ShapeEnum.CONTROL:
-                    target= None
+                    target = None
                     if len(self.stack) > 0:
                         target = self.stack.pop()
                     matches = []
                     for c in self.current.get_all_connections():
                         if c[0].get_value() == target and c[2] != self.p_k:
                             matches.append(c)
-                    if len(matches)<1:
+                    if len(matches) < 1:
                         for c in self.current.get_all_connections():
                             if c[0].get_value() == None and c[2] != self.p_k:
                                 matches.append(c)
-                    
+
                     min_dist = None
                     nearest = None
                     for m in matches:
-                        dist=distance(self.current.center, m[1])
-                        if min_dist is None or dist<min_dist:
+                        dist = distance(self.current.center, m[1])
+                        if min_dist is None or dist < min_dist:
                             min_dist = dist
                             nearest = m
 
@@ -355,7 +360,7 @@ class Interpreter:
                     print()
                     print("--------------|finished|--------------")
                     exit()
-                
+
                 case ShapeEnum.ANY:
                     self.default_next()
             steps += 1

@@ -27,7 +27,7 @@ class ShapeEnum(Enum):
     TO_CHAR = auto()
     CHR_TO_NUM = auto()
 
-    AND =auto()
+    AND = auto()
     OR = auto()
     NOT = auto()
 
@@ -37,15 +37,11 @@ class ShapeEnum(Enum):
 
     IN = auto()
     OUT = auto()
-    OUT_NO_LF = auto() 
+    OUT_NO_LF = auto()
+
 
 class Shape:
-    def __init__(
-        self,
-        contour: np.ndarray,
-        circular: bool,
-        center
-    ):
+    def __init__(self, contour: np.ndarray, circular: bool, center):
         self.center = center
         self.contour = contour
         self.circular = circular
@@ -60,18 +56,16 @@ class Shape:
             ((1, True), ((4, True),)): ShapeEnum.END,
             ((4, True), False): ShapeEnum.JUNCTION,
             ((5, True),): ShapeEnum.NUMBER,
-            ((6, False), False) : ShapeEnum.POP,
-            ((6, False), True) : ShapeEnum.OPER,
-            ((3, True), 3):ShapeEnum.DUPE,
+            ((6, False), False): ShapeEnum.POP,
+            ((6, False), True): ShapeEnum.OPER,
+            ((3, True), 3): ShapeEnum.DUPE,
             ((5, False), False): ShapeEnum.CONTAINER,
             ((3, True), False): ShapeEnum.CONTROL,
             ((5, False), True): ShapeEnum.STACK,
-        
             ((4, True), ((5, True),)): ShapeEnum.NUMBER_CHECK,
-            ((4, False), 1):ShapeEnum.TO_NUMBER,
-            ((4, False), 2):ShapeEnum.TO_CHAR,
-            ((4, False), 3):ShapeEnum.CHR_TO_NUM,
-
+            ((4, False), 1): ShapeEnum.TO_NUMBER,
+            ((4, False), 2): ShapeEnum.TO_CHAR,
+            ((4, False), 3): ShapeEnum.CHR_TO_NUM,
             ((8, False), ((1, True),)): ShapeEnum.OR,
             ((8, False), ((3, True),)): ShapeEnum.NOT,
             ((8, False), ((4, True),)): ShapeEnum.AND,
@@ -81,8 +75,7 @@ class Shape:
             ((8, False), 2): ShapeEnum.SMALLER,
             ((8, False), 3): ShapeEnum.EQUALS,
             ((8, False), 4): ShapeEnum.EQUALS,
-
-            ((4, False), False) : ShapeEnum.TO_STRING,
+            ((4, False), False): ShapeEnum.TO_STRING,
             ((2, False), False): ShapeEnum.LENGTH,
             ((7, False), False): ShapeEnum.IN,
             ((6, True), False): ShapeEnum.OUT,
@@ -94,7 +87,7 @@ class Shape:
         allc = []
         for k in self.connecteds.keys():
             for c in self.connecteds[k][1]:
-                allc.append(c+[k])
+                allc.append(c + [k])
 
         return allc
 
@@ -103,30 +96,28 @@ class Shape:
         farthest = None
         f_k = None
         for k in self.connecteds.keys():
-            dist = distance(self.connecteds[k][0], from_point) 
+            dist = distance(self.connecteds[k][0], from_point)
             if dist > max_dist:
                 max_dist = dist
                 farthest = self.connecteds[k]
                 f_k = k
-
 
         min_dist = None
         nearest = None
         if farthest is None:
             return None
         for f in farthest[1]:
-            dist=distance(farthest[0], f[1])
-            if min_dist is None or dist<min_dist:
+            dist = distance(farthest[0], f[1])
+            if min_dist is None or dist < min_dist:
                 min_dist = dist
                 nearest = f
 
-        return nearest+[f_k]
+        return nearest + [f_k]
 
     def get_value(self):
-        if self.get_shape_type()==ShapeEnum.NUMBER:
+        if self.get_shape_type() == ShapeEnum.NUMBER:
             return len(self.get_holes())
         return self.value
-        
 
     def get_shape_type(self):
         this_points = len(self.points)
@@ -166,7 +157,7 @@ class Shape:
         else:
             self.connecteds[path_contour_index] = [
                 connecting_point,
-                [[shape, to_point]]
+                [[shape, to_point]],
             ]
 
     def add_inside(self, shape):
