@@ -36,6 +36,7 @@ class ShapeEnum(Enum):
     SMALLER = auto()
 
     IN = auto()
+    READ = auto()
     OUT = auto()
     OUT_NO_LF = auto()
 
@@ -80,6 +81,8 @@ class Shape:
             ((7, False), False): ShapeEnum.IN,
             ((6, True), False): ShapeEnum.OUT,
             ((6, True), 1): ShapeEnum.OUT_NO_LF,
+            ((7, False), ((1, True),)): ShapeEnum.READ,
+            ((7, False), ((1, False),)): ShapeEnum.READ,
         }
         # [[shape sides, is_convex], [hole shapes]]
 
