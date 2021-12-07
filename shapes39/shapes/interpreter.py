@@ -106,6 +106,28 @@ class Interpreter:
 
                 self.default_next()
 
+            elif shape_type == ShapeEnum.READ:
+                if len(self.stack) > 0:
+                    path = self.stack.pop()
+
+                    if type(path) is str:
+                        try:
+                            with open(path, "r") as f:
+                                self.stack.append(f.read())
+                        except FileNotFoundError:
+                            self.stack.append(0)
+                        except UnicodeDecodeError:
+                            self.stack.append(1)
+                        except Exception as e:
+                            if self.verbose:
+                                print(
+                                    f"|encountered unhadled exception while reading file: {e}|"
+                                )
+
+                            self.stack.append(0)
+
+                self.default_next()
+
             elif shape_type == ShapeEnum.CONTAINER:
                 if self.current.value is not None:
                     self.stack.append(self.current.value)

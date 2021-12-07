@@ -36,11 +36,46 @@ class ShapeEnum(Enum):
     SMALLER = auto()
 
     IN = auto()
+    READ = auto()
     OUT = auto()
     OUT_NO_LF = auto()
 
 
 class Shape:
+    type_map = {
+        ((1, True), ((3, True),)): ShapeEnum.START,
+        ((1, True), ((4, True),)): ShapeEnum.END,
+        ((4, True), False): ShapeEnum.JUNCTION,
+        ((5, True),): ShapeEnum.NUMBER,
+        ((6, False), False): ShapeEnum.POP,
+        ((6, False), True): ShapeEnum.OPER,
+        ((3, True), 3): ShapeEnum.DUPE,
+        ((5, False), False): ShapeEnum.CONTAINER,
+        ((3, True), False): ShapeEnum.CONTROL,
+        ((5, False), True): ShapeEnum.STACK,
+        ((4, True), ((5, True),)): ShapeEnum.NUMBER_CHECK,
+        ((4, False), 1): ShapeEnum.TO_NUMBER,
+        ((4, False), 2): ShapeEnum.TO_CHAR,
+        ((4, False), 3): ShapeEnum.CHR_TO_NUM,
+        ((8, False), ((1, True),)): ShapeEnum.OR,
+        ((8, False), ((3, True),)): ShapeEnum.NOT,
+        ((8, False), ((4, True),)): ShapeEnum.AND,
+        ((8, False), ((1, False),)): ShapeEnum.OR,
+        ((8, False), ((3, False),)): ShapeEnum.NOT,
+        ((8, False), ((4, False),)): ShapeEnum.AND,
+        ((8, False), 2): ShapeEnum.SMALLER,
+        ((8, False), 3): ShapeEnum.EQUALS,
+        ((8, False), 4): ShapeEnum.EQUALS,
+        ((4, False), False): ShapeEnum.TO_STRING,
+        ((2, False), False): ShapeEnum.LENGTH,
+        ((7, False), False): ShapeEnum.IN,
+        ((6, True), False): ShapeEnum.OUT,
+        ((6, True), 1): ShapeEnum.OUT_NO_LF,
+        ((7, False), ((1, True),)): ShapeEnum.READ,
+        ((7, False), ((1, False),)): ShapeEnum.READ,
+    }
+    # [[shape sides, is_convex], [hole shapes]]
+
     def __init__(self, contour: np.ndarray, circular: bool, center):
         self.center = center
         self.contour = contour
@@ -51,37 +86,6 @@ class Shape:
         self.insides = []
         self.outer = None
         self.value = None
-        self.type_map = {
-            ((1, True), ((3, True),)): ShapeEnum.START,
-            ((1, True), ((4, True),)): ShapeEnum.END,
-            ((4, True), False): ShapeEnum.JUNCTION,
-            ((5, True),): ShapeEnum.NUMBER,
-            ((6, False), False): ShapeEnum.POP,
-            ((6, False), True): ShapeEnum.OPER,
-            ((3, True), 3): ShapeEnum.DUPE,
-            ((5, False), False): ShapeEnum.CONTAINER,
-            ((3, True), False): ShapeEnum.CONTROL,
-            ((5, False), True): ShapeEnum.STACK,
-            ((4, True), ((5, True),)): ShapeEnum.NUMBER_CHECK,
-            ((4, False), 1): ShapeEnum.TO_NUMBER,
-            ((4, False), 2): ShapeEnum.TO_CHAR,
-            ((4, False), 3): ShapeEnum.CHR_TO_NUM,
-            ((8, False), ((1, True),)): ShapeEnum.OR,
-            ((8, False), ((3, True),)): ShapeEnum.NOT,
-            ((8, False), ((4, True),)): ShapeEnum.AND,
-            ((8, False), ((1, False),)): ShapeEnum.OR,
-            ((8, False), ((3, False),)): ShapeEnum.NOT,
-            ((8, False), ((4, False),)): ShapeEnum.AND,
-            ((8, False), 2): ShapeEnum.SMALLER,
-            ((8, False), 3): ShapeEnum.EQUALS,
-            ((8, False), 4): ShapeEnum.EQUALS,
-            ((4, False), False): ShapeEnum.TO_STRING,
-            ((2, False), False): ShapeEnum.LENGTH,
-            ((7, False), False): ShapeEnum.IN,
-            ((6, True), False): ShapeEnum.OUT,
-            ((6, True), 1): ShapeEnum.OUT_NO_LF,
-        }
-        # [[shape sides, is_convex], [hole shapes]]
 
     def get_all_connections(self):
         allc = []
@@ -136,18 +140,18 @@ class Shape:
 
         # print((tuple(this_shape), tuple(hole_shapes)))
 
-        if (tuple(this_shape), tuple(hole_shapes)) in self.type_map.keys():
-            return self.type_map[(tuple(this_shape), tuple(hole_shapes))]
+        if (tuple(this_shape), tuple(hole_shapes)) in Shape.type_map.keys():
+            return Shape.type_map[(tuple(this_shape), tuple(hole_shapes))]
         if len(hole_shapes) == 0:
-            if (tuple(this_shape), False) in self.type_map.keys():
-                return self.type_map[(tuple(this_shape), False)]
+            if (tuple(this_shape), False) in Shape.type_map.keys():
+                return Shape.type_map[(tuple(this_shape), False)]
         if len(hole_shapes) > 0:
-            if (tuple(this_shape), len(hole_shapes)) in self.type_map.keys():
-                return self.type_map[(tuple(this_shape), len(hole_shapes))]
-            if (tuple(this_shape), True) in self.type_map.keys():
-                return self.type_map[(tuple(this_shape), True)]
-        if (tuple(this_shape),) in self.type_map.keys():
-            return self.type_map[(tuple(this_shape),)]
+            if (tuple(this_shape), len(hole_shapes)) in Shape.type_map.keys():
+                return Shape.type_map[(tuple(this_shape), len(hole_shapes))]
+            if (tuple(this_shape), True) in Shape.type_map.keys():
+                return Shape.type_map[(tuple(this_shape), True)]
+        if (tuple(this_shape),) in Shape.type_map.keys():
+            return Shape.type_map[(tuple(this_shape),)]
 
         return ShapeEnum.ANY
 
