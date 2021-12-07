@@ -112,7 +112,7 @@ class Interpreter:
 
                         if type(path) is str:
                             try:
-                                with open(path, 'r') as f:
+                                with open(path, "r") as f:
                                     self.stack.append(f.read())
                             except FileNotFoundError:
                                 self.stack.append(0)
@@ -120,7 +120,9 @@ class Interpreter:
                                 self.stack.append(1)
                             except Exception as e:
                                 if self.verbose:
-                                    print(f"|encountered unhadled exception while reading file: {e}|")
+                                    print(
+                                        f"|encountered unhadled exception while reading file: {e}|"
+                                    )
 
                                 self.stack.append(0)
 
