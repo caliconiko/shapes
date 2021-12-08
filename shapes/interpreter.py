@@ -2,6 +2,7 @@ from shapes.shape import Shape, ShapeEnum
 from typing import List
 from time import sleep
 from shapes.utils import distance
+import os
 
 
 class InterpreterError(Exception):
@@ -9,7 +10,7 @@ class InterpreterError(Exception):
 
 
 class Interpreter:
-    def __init__(self, shapes: List[Shape], verbose=False, time=0.3):
+    def __init__(self, shapes: List[Shape], verbose=False, time=0.3, home_dir=None):
         self.shapes = shapes
         self.stack = []
         self.current: None | Shape = None
@@ -17,6 +18,7 @@ class Interpreter:
         self.p_k = None
         self.verbose = verbose
         self.time = time
+        self.home_dir = home_dir
 
     def get_start(self) -> Shape:
         starts = []
@@ -112,8 +114,12 @@ class Interpreter:
 
                         if type(path) is str:
                             try:
-                                with open(path, "r") as f:
-                                    self.stack.append(f.read())
+                                if self.home_dir is None:
+                                    with open(path, "r") as f:
+                                        self.stack.append(f.read())
+                                else:
+                                    with open(os.path.join(self.home_path, path), "r") as f:
+                                        self.stack.append(f.read())
                             except FileNotFoundError:
                                 self.stack.append(0)
                             except UnicodeDecodeError:
