@@ -2,7 +2,7 @@ from shapes.shape import Shape, ShapeEnum
 from typing import List
 from time import sleep
 from shapes.utils import distance
-import os
+from pathlib import Path
 
 
 class InterpreterError(Exception):
@@ -118,7 +118,7 @@ class Interpreter:
                                     with open(path, "r") as f:
                                         self.stack.append(f.read())
                                 else:
-                                    with open(os.path.join(self.home_path, path), "r") as f:
+                                    with open(Path(self.home_dir).joinpath(path), "r") as f:
                                         self.stack.append(f.read())
                             except FileNotFoundError:
                                 self.stack.append(0)

@@ -99,7 +99,7 @@ def main():
             if args.time is None:
                 t = 0
 
-            interpreter = Interpreter(shapes, args.verbose, t)
+            interpreter = Interpreter(shapes, args.verbose, t, home_dir=parser.home_dir)
             interpreter.run()
 
         case "parse":
