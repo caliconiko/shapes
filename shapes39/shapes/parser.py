@@ -1,5 +1,5 @@
 import cv2
-import os
+from pathlib import Path
 import numpy as np
 from dotmap import DotMap
 import imutils
@@ -14,7 +14,7 @@ class ParserError(Exception):
 
 class Parser:
     def __init__(self, path, debug=False):
-        if not os.path.isfile(path):
+        if not Path(path).is_file():
             raise ParserError("Huh? Can't find that file anywhere")
         self.img = cv2.imread(path)
         if self.img is None:
@@ -23,16 +23,15 @@ class Parser:
         if len(self.get_image_colors(self.img)) < 2:
             raise ParserError("Wtf are you trying to do?")
         self.imgray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-        self.home_path = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), os.pardir)
-        )
+
+        self.home_dir = Path(path).absolute().parent
         self.debug = debug
 
-        if not os.path.isdir(self.get_path("debugging")):
-            os.mkdir(self.get_path("debugging"))
+        if not Path(self.get_path("debugging")).is_dir():
+            Path(self.get_path("debugging")).mkdir()
 
     def get_path(self, path: str):
-        return os.path.join(self.home_path, path)
+        return str(Path(self.home_dir).joinpath(path).absolute())
 
     def get_image_colors(self, img):
         color_index = np.unique(img, axis=0, return_inverse=True)

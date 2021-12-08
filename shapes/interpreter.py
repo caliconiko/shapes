@@ -118,7 +118,9 @@ class Interpreter:
                                     with open(path, "r") as f:
                                         self.stack.append(f.read())
                                 else:
-                                    with open(Path(self.home_dir).joinpath(path), "r") as f:
+                                    with open(
+                                        Path(self.home_dir).joinpath(path), "r"
+                                    ) as f:
                                         self.stack.append(f.read())
                             except FileNotFoundError:
                                 self.stack.append(0)

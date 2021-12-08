@@ -13,7 +13,7 @@ def print_shapes_found(shapes):
 
 
 def main():
-    # starts parsers
+    # start parsers
     arg_parser = argparse.ArgumentParser(
         description="Shapes Interpreter for Python 3.10"
     )
