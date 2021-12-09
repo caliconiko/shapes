@@ -82,7 +82,7 @@ def main():
     if command == "profile":
         print("|profiling...|")
         cProfile.runctx(
-            "Parser(args.path, args.debug).parse_shapes()",
+            "Parser(path, args.debug).parse_shapes()",
             globals(),
             locals(),
             sort="tottime",
@@ -103,7 +103,7 @@ def main():
         if args.time is None:
             t = 0
 
-        interpreter = Interpreter(shapes, args.verbose, t)
+        interpreter = Interpreter(shapes, args.verbose, t, home_dir=parser.home_dir)
         interpreter.run()
 
     elif command == "parse":
