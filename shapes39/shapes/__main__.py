@@ -70,6 +70,9 @@ def main():
 
     args = arg_parser.parse_args()
 
+    if not args.command:
+        arg_parser.error("No commands whatsoever given")
+
     path = args.path
     if args.path[-4:] != ".png":
         path = args.path + ".png"
