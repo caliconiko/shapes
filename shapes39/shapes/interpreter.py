@@ -110,16 +110,16 @@ class Interpreter:
 
             elif shape_type == ShapeEnum.READ:
                 if len(self.stack) > 0:
-                    path = self.stack.pop()
+                        path = str(self.stack.pop())
 
-                    if type(path) is str:
                         try:
                             if self.home_dir is None:
                                 with open(path, "r") as f:
                                     self.stack.append(f.read())
                             else:
-                                print(Path(self.home_dir).joinpath(path))
-                                with open(Path(self.home_dir).joinpath(path), "r") as f:
+                                with open(
+                                    Path(self.home_dir).joinpath(path), "r"
+                                ) as f:
                                     self.stack.append(f.read())
                         except FileNotFoundError:
                             self.stack.append(0)
@@ -131,7 +131,7 @@ class Interpreter:
                                     f"|encountered unhadled exception while reading file: {e}|"
                                 )
 
-                            self.stack.append(0)
+                            self.stack.append(2)
 
                 self.default_next()
 

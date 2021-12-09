@@ -110,29 +110,28 @@ class Interpreter:
 
                 case ShapeEnum.READ:
                     if len(self.stack) > 0:
-                        path = self.stack.pop()
+                        path = str(self.stack.pop())
 
-                        if type(path) is str:
-                            try:
-                                if self.home_dir is None:
-                                    with open(path, "r") as f:
-                                        self.stack.append(f.read())
-                                else:
-                                    with open(
-                                        Path(self.home_dir).joinpath(path), "r"
-                                    ) as f:
-                                        self.stack.append(f.read())
-                            except FileNotFoundError:
-                                self.stack.append(0)
-                            except UnicodeDecodeError:
-                                self.stack.append(1)
-                            except Exception as e:
-                                if self.verbose:
-                                    print(
-                                        f"|encountered unhadled exception while reading file: {e}|"
-                                    )
+                        try:
+                            if self.home_dir is None:
+                                with open(path, "r") as f:
+                                    self.stack.append(f.read())
+                            else:
+                                with open(
+                                    Path(self.home_dir).joinpath(path), "r"
+                                ) as f:
+                                    self.stack.append(f.read())
+                        except FileNotFoundError:
+                            self.stack.append(0)
+                        except UnicodeDecodeError:
+                            self.stack.append(1)
+                        except Exception as e:
+                            if self.verbose:
+                                print(
+                                    f"|encountered unhadled exception while reading file: {e}|"
+                                )
 
-                                self.stack.append(0)
+                            self.stack.append(2)
 
                     self.default_next()
 
