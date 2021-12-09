@@ -431,7 +431,7 @@ class Parser:
 
         shapes = self.get_shapes(shape_contours, shape_hierarchy, masks.shape)
 
-        if len(shapes)<1:
+        if len(shapes) < 1:
             raise ParserError("No shapes found")
 
         connections = self.get_connections(
