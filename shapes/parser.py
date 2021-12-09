@@ -52,6 +52,8 @@ class Parser:
 
     def get_color_ranges_mask(self, colors, img):
         c_range_sum = np.zeros(self.imgray.shape, np.uint8)
+        c_range = cv2.inRange(img, colors[0], colors[0])
+        c_range_sum = cv2.bitwise_or(c_range_sum, c_range)
         for i in range(len(colors) - 1):
             c_range = cv2.inRange(img, colors[i], colors[i + 1])
             c_range_sum = cv2.bitwise_or(c_range_sum, c_range)
@@ -428,6 +430,9 @@ class Parser:
         )
 
         shapes = self.get_shapes(shape_contours, shape_hierarchy, masks.shape)
+
+        if len(shapes)<1:
+            raise ParserError("No shapes found")
 
         connections = self.get_connections(
             path_contours, self.get_no_hole_shapes(shapes), masks
