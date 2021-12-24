@@ -123,7 +123,7 @@ class Shape:
 
         if shape_type == ShapeEnum.NUMBER:
             return len(self.get_holes())
-        elif shape_type == ShapeEnum.STACK:
+        elif shape_type == ShapeEnum.STACK and self.value is not None:
             return self.value[-1]
 
         return self.value
