@@ -119,8 +119,13 @@ class Shape:
         return nearest + [f_k]
 
     def get_value(self):
-        if self.get_shape_type() == ShapeEnum.NUMBER:
+        shape_type = self.get_shape_type()
+
+        if shape_type == ShapeEnum.NUMBER:
             return len(self.get_holes())
+        elif shape_type == ShapeEnum.STACK:
+            return self.value[-1]
+
         return self.value
 
     def get_shape_type(self):
