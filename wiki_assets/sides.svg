@@ -27,8 +27,8 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="0.96102398"
-     inkscape:cx="653.98992"
-     inkscape:cy="379.28294"
+     inkscape:cx="629.01656"
+     inkscape:cy="307.48452"
      inkscape:window-width="1920"
      inkscape:window-height="1057"
      inkscape:window-x="5"
@@ -54,7 +54,7 @@
          y="-30.754667"
          id="tspan12395" /></text>
     <rect
-       style="fill:#fee761;stroke:none;stroke-width:5.56605;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#da2424;stroke:none;stroke-width:5.56605;stroke-linecap:round;stroke-dashoffset:83.6023"
        id="rect20838"
        width="36.587288"
        height="35.92207"
@@ -62,7 +62,7 @@
        y="40.228683" />
     <path
        sodipodi:type="star"
-       style="fill:#fee761;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#da2424;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
        id="path20862"
        inkscape:flatsided="true"
        sodipodi:sides="3"
@@ -79,12 +79,12 @@
        inkscape:transform-center-x="4.5128667"
        inkscape:transform-center-y="0.77175056" />
     <path
-       style="fill:#fee761;stroke:none;stroke-width:2.47939;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#da2424;stroke:none;stroke-width:2.47939;stroke-linecap:round;stroke-dashoffset:83.6023"
        d="m 200.85047,58.069758 -1.71598,-14.067235 12.27315,7.720547 14.72183,-12.760723 -2.06348,17.6689 10.53292,5.455026 -9.11597,4.749241 1.09101,18.805699 -14.2962,-11.33568 -18.90538,9.994148 4.39366,-14.622165 -13.17558,-7.286838 z"
        id="path20903"
        sodipodi:nodetypes="ccccccccccccc" />
     <path
-       style="fill:none;stroke:#07e5a0;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:none;stroke:#f77622;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
        d="m -4.4270154,134.02303 c 0.585189,-1.20964 7.210051,-8.91694 8.537815,-7.58917 2.324915,2.32491 -7.12733,13.45164 -8.537815,14.86212 -2.426608,2.42661 4.53013002,-10.01578 6.956738,-7.58917 1.839843,1.83984 -3.49186298,9.34354 -4.74323,10.75132 -3.891369,4.37779 6.606504,-10.0899 5.059446,-1.58107 -0.78426,4.31342 -10.392236,11.69997 -6.008092,11.69997 1.524274,0 5.640552,-9.15314 8.537815,-10.1189 3.911368,-1.30378 -4.040625,7.23524 -6.640523,10.43511 -8.552639,10.52633 12.5072614,-13.27084 -1.581077,11.38375"
        id="path22168" />
     <path
@@ -93,12 +93,12 @@
        id="path22170"
        sodipodi:nodetypes="cc" />
     <path
-       style="fill:none;stroke:#fee761;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:none;stroke:#da2424;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
        d="m -2.8459385,43.258445 c 10.4289975,-13.97331 -1.2611047,10.42572 -3.1621536,15.17834 -1.5838609,3.95965 5.58679082,-6.44929 8.2215997,-9.80268 2.7273419,-3.47116 -4.8242577,7.39449 -7.2729536,11.06754 -1.8350087,2.75251 5.26295405,-5.52729 8.5378151,-5.05945 4.689758,0.66997 -11.1299243,15.16352 -7.5891688,12.01619 11.9482501,-10.62067 1.5072242,6.22965 -0.3162155,11.69996"
        id="path22532" />
     <path
        sodipodi:type="star"
-       style="fill:#fee761;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#da2424;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
        id="path22765"
        inkscape:flatsided="true"
        sodipodi:sides="6"
@@ -114,7 +114,7 @@
        transform="matrix(0.23371691,0,0,0.23371691,149.47992,12.442834)" />
     <path
        sodipodi:type="star"
-       style="fill:#07e5a0;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#f77622;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
        id="path22975"
        inkscape:flatsided="true"
        sodipodi:sides="8"
@@ -131,7 +131,7 @@
        inkscape:transform-center-x="2.8863368e-06" />
     <path
        sodipodi:type="star"
-       style="fill:#07e5a0;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#f77622;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
        id="path23181"
        inkscape:flatsided="true"
        sodipodi:sides="9"
@@ -148,7 +148,7 @@
        inkscape:transform-center-x="2.8863368e-06" />
     <path
        sodipodi:type="star"
-       style="fill:#07e5a0;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#f77622;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
        id="path23684"
        inkscape:flatsided="true"
        sodipodi:sides="10"
@@ -165,7 +165,7 @@
        inkscape:transform-center-x="2.8863368e-06" />
     <path
        sodipodi:type="star"
-       style="fill:#07e5a0;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
+       style="fill:#f77622;stroke:none;stroke-width:20;stroke-linecap:round;stroke-dashoffset:83.6023"
        id="path24132"
        inkscape:flatsided="true"
        sodipodi:sides="7"
@@ -189,12 +189,12 @@
        transform="translate(0,-0.82594193)"><tspan
          x="45.827492"
          y="26.430141"
-         id="tspan87215">This has<tspan
+         id="tspan86014">This has<tspan
    y="26.430141"
-   id="tspan87217"> </tspan></tspan><tspan
+   id="tspan86016"> </tspan></tspan><tspan
          x="45.827492"
          y="35.690553"
-         id="tspan87219">four sides</tspan></text>
+         id="tspan86018">four sides</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.40833px;font-family:'Comic Mono';-inkscape-font-specification:'Comic Mono Bold';text-align:center;text-anchor:middle;white-space:pre;inline-size:48.1554;fill:#ffeee5;stroke:none;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
@@ -204,12 +204,12 @@
        transform="translate(80.666995)"><tspan
          x="45.827492"
          y="26.430141"
-         id="tspan87221">This has<tspan
+         id="tspan86020">This has<tspan
    y="26.430141"
-   id="tspan87223"> </tspan></tspan><tspan
+   id="tspan86022"> </tspan></tspan><tspan
          x="45.827492"
          y="35.690553"
-         id="tspan87225">three sides</tspan></text>
+         id="tspan86024">three sides</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.40833px;font-family:'Comic Mono';-inkscape-font-specification:'Comic Mono Bold';text-align:center;text-anchor:middle;white-space:pre;inline-size:50.0826;fill:#ffeee5;stroke:none;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
@@ -219,12 +219,12 @@
        transform="translate(165.4637)"><tspan
          x="45.827492"
          y="26.430141"
-         id="tspan87227">This has<tspan
+         id="tspan86026">This has<tspan
    y="26.430141"
-   id="tspan87229"> </tspan></tspan><tspan
+   id="tspan86028"> </tspan></tspan><tspan
          x="45.827492"
          y="35.690553"
-         id="tspan87231">twelve sides</tspan></text>
+         id="tspan86030">twelve sides</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.40833px;font-family:'Comic Mono';-inkscape-font-specification:'Comic Mono Bold';text-align:center;text-anchor:middle;white-space:pre;inline-size:43.4751;fill:#ffeee5;stroke:none;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
@@ -234,12 +234,12 @@
        transform="translate(249.43446)"><tspan
          x="45.827492"
          y="26.430141"
-         id="tspan87233">This has<tspan
+         id="tspan86032">This has<tspan
    y="26.430141"
-   id="tspan87235"> </tspan></tspan><tspan
+   id="tspan86034"> </tspan></tspan><tspan
          x="45.827492"
          y="35.690553"
-         id="tspan87237">six sides</tspan></text>
+         id="tspan86036">six sides</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:7.40833px;font-family:'Comic Mono';-inkscape-font-specification:'Comic Mono Bold';text-align:start;text-anchor:start;white-space:pre;inline-size:195.1;fill:#ffeee5;stroke:none;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
@@ -249,11 +249,11 @@
        transform="translate(-9.1889852,80.684778)"><tspan
          x="29.733908"
          y="26.430141"
-         id="tspan87239">Shapes that are too circular, only have one side
+         id="tspan86038">Shapes that are too circular, only have one side
 </tspan><tspan
          x="29.733908"
          y="35.690553"
-         id="tspan87241">These have one side</tspan></text>
+         id="tspan86040">These have one side</tspan></text>
     <path
        style="fill:none;stroke:#ffeee5;stroke-width:5.29167;stroke-linecap:round;stroke-dashoffset:83.6023"
        d="m 310.55415,192.44447 c 5.39999,-7.60848 14.83842,-7.40494 5.7816,1.65188 -0.68003,0.68004 4.60478,-7.58458 5.23097,-6.33222 0.41217,0.82435 -0.75261,3.10179 -0.27532,3.57908 0.66915,0.66916 3.81396,-3.53864 4.40502,-4.12971 1.0074,-1.0074 -2.10865,3.12231 -1.10125,4.12971 0.85902,0.85901 2.60292,-2.60292 3.02845,-3.02845 0.63912,-0.63912 0.23219,2.72613 1.10127,2.47782"
