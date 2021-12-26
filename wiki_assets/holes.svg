@@ -9,6 +9,9 @@
    id="svg5"
    inkscape:version="1.1 (c68e22c387, 2021-05-23)"
    sodipodi:docname="holes.svg"
+   inkscape:export-filename="D:\Niko\coding-projects\shapes\wiki_assets\holes.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,12 +27,12 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="0.5"
-     inkscape:cx="624"
+     inkscape:cx="623"
      inkscape:cy="139"
      inkscape:window-width="1920"
-     inkscape:window-height="1057"
-     inkscape:window-x="5"
-     inkscape:window-y="-8"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="1072"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
@@ -47,13 +50,13 @@
        transform="translate(52.321941,19.765886)"><tspan
          x="22.583403"
          y="14.310274"
-         id="tspan38307">This shape </tspan><tspan
+         id="tspan929">This shape </tspan><tspan
          x="22.583403"
          y="23.570686"
-         id="tspan38309">has three </tspan><tspan
+         id="tspan931">has three </tspan><tspan
          x="22.583403"
          y="32.831098"
-         id="tspan38311">holes</tspan></text>
+         id="tspan933">holes</tspan></text>
     <g
        id="g17866"
        transform="translate(-5.059446,6.3500003)">
@@ -209,13 +212,13 @@
        transform="translate(50.451054,99.225386)"><tspan
          x="22.583403"
          y="14.310274"
-         id="tspan38313">This shape </tspan><tspan
+         id="tspan935">This shape </tspan><tspan
          x="22.583403"
          y="23.570686"
-         id="tspan38315">has three </tspan><tspan
+         id="tspan937">has three </tspan><tspan
          x="22.583403"
          y="32.831098"
-         id="tspan38317">holes too</tspan></text>
+         id="tspan939">holes too</tspan></text>
     <g
        id="g26573"
        transform="translate(1.0583333,1.0583333)">
