@@ -46,9 +46,10 @@ Truth machine
 ## Shapes...
 
 Soon™:
-* Better shape classification
 * Better docs
+* Better shape classification
 * Functionoid path enviornments
+* [...](https://github.com/photon-niko/shapes/blob/main/roadmap.md)
 
 -------
 
