@@ -1,15 +1,17 @@
 import argparse
+from typing import List
 from shapes.interpreter import Interpreter
 from shapes.parser import Parser
+from shapes.shape import Shape
 from time import time
 import cProfile
 
 
-def print_shapes_found(shapes):
+def print_shapes_found(shapes:List[Shape]):
     print(
-        f"|shapes found: {[f'{s.get_shape_type().name} : {[len(h.points) for h in s.get_holes()]}' for s in shapes if s.outer is None]}|"
+        f"|shapes found: {[f'{s.get_shape_type().name}({len(s.points)} {s.circular}) : {[(len(h.points), h.circular)  for h in s.get_holes()]}' for s in shapes if s.outer is None]}|"
     )
-    print("|shape type : [number of points each hole the shape has]|")
+    print("|shape type(number of points  circularness) : [(number of points  circularness) for each hole the shape has]|")
 
 
 def main():

@@ -516,8 +516,8 @@ class Parser:
             for i, s in enumerate(shapes):
                 if s.outer is None:
                     for p in s.points:
-
                         cv2.circle(self.debug_out, p[0], 5, (255, 0, 0), -1)
+
                     self.debug_save_image(self.debug_out, "seen.png")
                     cv2.putText(
                         self.debug_out,
@@ -528,6 +528,13 @@ class Parser:
                         (128, 128, 128),
                         2,
                     )
+                else:
+                    cv2.drawContours(self.debug_out, [s.points], -1, (255,255,255), thickness=1)
+                    for p in s.points:
+                        cv2.circle(self.debug_out, p[0], 2, (0, 0, 255), -1)
+
+                    self.debug_save_image(self.debug_out, "seen.png")
+
                 for k in s.connecteds.keys():
                     for i, c in enumerate(s.connecteds[k][1]):
                         thickness = 20 // (i + 1)
