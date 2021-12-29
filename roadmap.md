@@ -7,7 +7,7 @@ Disclaimer: I have no idea what I am doing
 
    The it just works update
 
-   - [X] Rewrite wiki
+   - [ ] Rewrite wiki
 
  * 1.0
    
