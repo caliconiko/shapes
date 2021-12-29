@@ -7,7 +7,7 @@ Disclaimer: I have no idea what I am doing
 
    The it just works update
 
-   - [ ] Rewrite wiki
+   - [X] Rewrite wiki
 
  * 1.0
    
@@ -17,6 +17,7 @@ Disclaimer: I have no idea what I am doing
    - [ ] Remove 3.10 dependency
    - [ ] Dictionaries
    - [ ] Compiling
+   - [ ] Move docs to read the docs
    
  * 2.0 
 
