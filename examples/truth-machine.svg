@@ -8,8 +8,8 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
-   sodipodi:docname="truth_new.svg"
-   inkscape:export-filename="D:\Niko\coding-projects\shapes\examples\truth_new.png"
+   sodipodi:docname="truth-machine.svg"
+   inkscape:export-filename="D:\Niko\coding-projects\shapes\examples\truth-machine.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -27,9 +27,9 @@
      inkscape:document-units="mm"
      showgrid="false"
      units="px"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="909.33932"
-     inkscape:cy="836.50732"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="685.18647"
+     inkscape:cy="558.79114"
      inkscape:window-width="1920"
      inkscape:window-height="1057"
      inkscape:window-x="5"
@@ -68,8 +68,8 @@
        d="m 160.98142,109.42423 -36.41106,-0.17848"
        id="path8361" />
     <path
-       style="fill:none;fill-opacity:0.996078;stroke:#2176cc;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:83.6023;opacity:1"
-       d="m 167.40679,104.90992 -0.23077,-28.426223 18.62746,0.126208 22.13222,22.806562 -0.17849,24.795163 -23.30768,0.12621 z"
+       style="opacity:1;fill:none;fill-opacity:0.996078;stroke:#2176cc;stroke-width:2.64583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:83.6023"
+       d="m 167.40679,104.90992 -0.23077,-29.484556 18.62746,0.126208 22.13222,23.864895 -0.17849,24.795163 -23.30768,0.12621 z"
        id="path8530"
        sodipodi:nodetypes="ccccccc" />
     <rect
@@ -89,10 +89,6 @@
        inkscape:export-filename="D:\Niko\coding-projects\shapes\examples\rect9612.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
-    <path
-       style="opacity:1;fill:none;fill-opacity:0.996078;stroke:#2176cc;stroke-width:2.64599;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:83.6023"
-       d="m 98.876359,190.26917 36.856471,-7.20291"
-       id="path13516" />
     <path
        style="opacity:1;fill:none;fill-opacity:0.996078;stroke:#2176cc;stroke-width:2.64599;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:83.6023"
        d="M 95.911457,98.821874 187.06041,187.85416"
@@ -175,8 +171,8 @@
          sodipodi:nodetypes="cccccc" />
     </g>
     <path
-       style="fill:#ff7d6e;fill-opacity:1;stroke-width:0.607296;stroke-linecap:round;stroke-dashoffset:83.6023"
-       d="m 178.08135,86.767561 18.82958,18.829569 22.04235,-0.17531 0.057,-21.344645 -19.26411,-19.264108 -21.96344,0.144973 z"
+       style="fill:#ff7d6e;fill-opacity:1;stroke-width:0.602824;stroke-linecap:round;stroke-dashoffset:83.6023"
+       d="m 177.27351,85.672305 18.96805,18.876335 21.7189,-0.17531 0.0562,-21.344639 -18.98143,-19.264108 -21.7644,0.0044 z"
        id="path6040"
        sodipodi:nodetypes="ccccccc" />
   </g>
