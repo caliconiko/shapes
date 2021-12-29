@@ -38,10 +38,10 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
   ```
 ## Shapes!!!
 Hello, World!
-![](https://github.com/PhotonNikko/shapes/blob/main/helloworld.png)
+![](https://github.com/PhotonNikko/shapes/blob/main/examples/helloworld.png)
 
 Truth machine
-![](https://github.com/PhotonNikko/shapes/blob/main/truth.png)
+![](https://github.com/PhotonNikko/shapes/blob/main/examples/truth.png)
 
 ## Shapes...
 
