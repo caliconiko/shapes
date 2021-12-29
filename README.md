@@ -41,7 +41,7 @@ Hello, World!
 ![](https://github.com/PhotonNikko/shapes/blob/main/examples/helloworld.png)
 
 Truth machine
-![](https://github.com/PhotonNikko/shapes/blob/main/examples/truth.png)
+![](https://github.com/PhotonNikko/shapes/blob/main/examples/truth-machine.png)
 
 ## Shapes...
 
