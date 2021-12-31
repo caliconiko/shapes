@@ -51,6 +51,10 @@ Soon™:
 * Functionoid path enviornments
 * [...](https://github.com/photon-niko/shapes/blob/main/roadmap.md)
 
+## Shapes...?
+
+[Consider contributing to Shapes!](https://github.com/photon-niko/shapes/blob/main/CONTRIBUTING.md)
+
 -------
 
 > Star this repo if you like my esolang :)
