@@ -53,7 +53,7 @@ Soon™:
 
 ## Shapes...?
 
-Consider contributing to Shapes!
+[Consider contributing to Shapes!](https://github.com/photon-niko/shapes/blob/main/CONTRIBUTING.md)
 
 -------
 
