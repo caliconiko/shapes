@@ -43,6 +43,8 @@ Hello, World!
 Truth machine
 ![](https://github.com/PhotonNikko/shapes/blob/main/examples/truth-machine.png)
 
+[more...](https://github.com/photon-niko/shapes/tree/main/examples)
+
 ## Shapes...
 
 Soon™:
