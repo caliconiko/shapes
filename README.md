@@ -29,7 +29,7 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
   ```
 > With 3.9, do
 > ```
-> python -m shapes39.shapes interpret "path\to\program.png"
+> python -m shapes.shapes39 interpret "path\to\program.png"
 > ```
 
 * For more options and or thingies, do
