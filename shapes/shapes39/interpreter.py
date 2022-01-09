@@ -230,7 +230,7 @@ class Interpreter:
                         try:
                             self.stack.append(float(val))
                         except ValueError:
-                            self.stack.append(inp)
+                            self.stack.append(val)
 
                 self.default_next()
 

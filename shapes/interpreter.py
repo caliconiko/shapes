@@ -249,12 +249,12 @@ class Interpreter:
                             self.stack.append(b)
                             self.stack.append(a)
 
-                        holes = self.current.get_holes()
+                        l = len(self.current.get_holes())
 
                         if self.verbose:
-                            print(f"|operation shape code: {len(holes)}|")
+                            print(f"|operation shape code: {l}|")
 
-                        match len(holes):
+                        match l:
                             case 1:
                                 if _both_is_num():
                                     self.stack.append(a + b)
