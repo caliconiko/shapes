@@ -21,7 +21,7 @@ For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/sha
 * Then, change your directory to wherever this file is located.
 * Install requirements with
   ```
-  python -m pip install -r shapes/requirements.txt
+  python -m pip install -r requirements.txt
   ```
 * Interpret Shapes programs with 
   ```
