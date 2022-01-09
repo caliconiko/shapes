@@ -3,7 +3,6 @@ from typing import List, Union
 from time import sleep
 from shapes.shapes39.utils import distance
 from pathlib import Path
-from pynput import keyboard
 
 
 class InterpreterError(Exception):
@@ -22,6 +21,7 @@ class Interpreter:
         self.home_dir = home_dir
         self.steps=0
         self.current = self.get_start()
+        self.is_running = False
 
     def get_start(self) -> Shape:
         starts = []
@@ -44,7 +44,7 @@ class Interpreter:
         next_s = self.current.get_default_next(self.p_point)
         if next_s is None:
             print("|finished due to dead-end|")
-            exit()
+            self.is_running=False
         self.current = next_s[0]
         self.p_point = next_s[1]
         self.p_k = next_s[2]
@@ -66,7 +66,6 @@ class Interpreter:
         if self.verbose:
             print(f"|{self.steps}, current: {self.current.get_shape_type().name}|")
             print(f"|number of points of current: {len(self.current.points)}|")
-            print(f"|global stack: {self.stack}|")
         self.previous = self.current
         shape_type = self.current.get_shape_type()
         if shape_type == ShapeEnum.START:
@@ -380,35 +379,38 @@ class Interpreter:
             if nearest is None:
                 print()
                 print("|finished due to dead-end|")
-                exit()
+                self.is_running=False
             self.current = nearest[0]
             self.p_point = nearest[1]
         elif shape_type == ShapeEnum.END:
             print()
             print("--------------|finished|--------------")
-            exit()
+            self.is_running=False
 
         elif shape_type == ShapeEnum.ANY:
             self.default_next()
         if self.verbose:
-            print("--------------------------------------")
+            print(f"|global stack: {self.stack}|")
+            if self.is_running:
+                print("--------------------------------------")
         self.steps += 1
 
     def run(self):
+        self.is_running=True
         try:
             if self.time >= 0:
                 while True:
                     self.step()
+                    if not self.is_running:
+                        break
+                    
                     sleep(self.time)
             else:
-                print("|press any key|")
                 while True:
                     self.step()
-                    with keyboard.Events() as events:
-                        event = events.get(1e6)
-                        if event is None:
-                            print('|took too much time to wait for input. aborted!|')
-                        else:
-                            continue
+                    if not self.is_running:
+                        break
+                    input("|press enter|")
+                    print("\r", end='\r')
         except KeyboardInterrupt:
             print("|aborted!|")
