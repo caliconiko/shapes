@@ -7,7 +7,8 @@ Disclaimer: I have no idea what I am doing
 
    The it just works update
 
-   - [ ] Rewrite wiki
+   - [X] Rewrite wiki
+   - [ ] Put this on pypi. If you're reading this, halp. How??
 
  * 1.0
    
