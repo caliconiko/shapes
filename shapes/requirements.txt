@@ -4,3 +4,4 @@ numpy
 dotmap
 imutils
 scipy
+pynput

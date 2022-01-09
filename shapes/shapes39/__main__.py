@@ -38,7 +38,7 @@ def main():
         help="path of file to interpret. if the given path doesn't have a file format, it defaults to .png",
     )
     interpret_parser.add_argument(
-        "-t", "--time", type=float, help="seconds to wait for every step"
+        "-t", "--time", type=float, help="seconds to wait for every step. if it is negative, press enter to step the program"
     )
     interpret_parser.add_argument(
         "-v",
