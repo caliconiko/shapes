@@ -1,9 +1,12 @@
 [tool.poetry]
 name = "shaapes"
-version = "0.1.0.dev1"
+version = "0.1.0.dev4"
 description = "A graphical shape based esolang"
+keywords = ["shapes", "graphical", "esoteric", "esolang", "programming", "language", "graph", "image"]
 authors = ["Calico Niko"]
-license = "GPLv3"
+readme = "README.md"
+repository = "https://github.com/photon-niko/shapes/"
+license = "GPL-3.0"
 packages = [
     {include = "shapes"}
 ]
