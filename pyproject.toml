@@ -1,12 +1,15 @@
 [tool.poetry]
-name = "shapes"
+name = "shaapes"
 version = "0.1.0.dev1"
 description = "A graphical shape based esolang"
 authors = ["Calico Niko"]
 license = "GPLv3"
+packages = [
+    {include = "shapes"}
+]
 
 [tool.poetry.dependencies]
-python = ">=3.9"
+python = ">=3.9, <3.11"
 opencv-python = "^4.5.5"
 numpy = "^1.22.3"
 dotmap = "^1.3.30"
