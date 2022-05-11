@@ -2,7 +2,7 @@
 
 # Shapes!
 
-Shapes is a graphical esolang that uses images with shapes!
+Shapes is a~~n award winning~~ graphical esolang that uses images with shapes!
 
 ## Shapes‽
 
@@ -48,7 +48,7 @@ Truth machine
 ## Shapes...
 
 Soon™:
-* Better docs
+* ~~Better docs~~
 * Better shape classification
 * Functionoid path enviornments
 * [...](https://github.com/photon-niko/shapes/blob/main/roadmap.md)
