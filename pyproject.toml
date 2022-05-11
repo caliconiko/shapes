@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "shaapes"
+version = "0.1.0.dev5"
+description = "A graphical shape based esolang"
+keywords = ["shapes", "graphical", "esoteric", "esolang", "programming", "language", "graph", "image"]
+authors = ["Calico Niko"]
+readme = "README.md"
+repository = "https://github.com/photon-niko/shapes/"
+license = "GPL-3.0"
+packages = [
+    {include = "shapes"}
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9, <3.11"
+opencv-python = "^4.5.5"
+numpy = "^1.22.3"
+dotmap = "^1.3.30"
+imutils = "^0.5.4"
+scipy = "^1.8.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
