@@ -2,7 +2,7 @@
 
 # Shapes!
 
-Shapes is ~~an award winning~~ graphical esolang that uses images with shapes!
+Shapes is a~~n award winning~~ graphical esolang that uses images with shapes!
 
 ## Shapes‽
 
