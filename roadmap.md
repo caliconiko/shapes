@@ -9,13 +9,13 @@ Disclaimer: I have no idea what I am doing
 
    - [X] Rewrite wiki
    - [ ] Put this on pypi. If you're reading this, halp. How??
+   - [ ] Remove 3.10 dependency
 
  * 1.0
    
    The much better update
    
    - [ ] Completely restructure code
-   - [ ] Remove 3.10 dependency
    - [ ] Dictionaries
    - [ ] Compiling
    - [ ] Move docs to read the docs
