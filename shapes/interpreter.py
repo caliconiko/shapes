@@ -1,5 +1,5 @@
 from shapes.shape import Shape, ShapeEnum
-from typing import List
+from typing import List, Union
 from time import sleep
 from shapes.utils import distance
 from pathlib import Path
@@ -13,7 +13,7 @@ class Interpreter:
     def __init__(self, shapes: List[Shape], verbose=False, time=0.3, home_dir=None):
         self.shapes = shapes
         self.stack = []
-        self.current: None | Shape = None
+        self.current: Union(Shape, None) = None
         self.p_point = None
         self.p_k = None
         self.verbose = verbose
@@ -61,53 +61,53 @@ class Interpreter:
     def push_back(self, x, y):
         self.stack.append(y)
         self.stack.append(x)
-
+    
     def step(self):
         if self.verbose:
             print(f"|{self.steps}, current: {self.current.get_shape_type().name}|")
             print(f"|number of points of current: {len(self.current.points)}|")
         self.previous = self.current
-        match self.current.get_shape_type():
-            case ShapeEnum.START:
-                # print(self.current.connecteds)
-                self.p_point = self.current.connecteds[
-                    list(self.current.connecteds.keys())[0]
-                ][1][0][1]
-                self.current = self.current.connecteds[
-                    list(self.current.connecteds.keys())[0]
-                ][1][0][0]
+        shape_type = self.current.get_shape_type()
+        if shape_type == ShapeEnum.START:
+            # print(self.current.connecteds)
+            self.p_point = self.current.connecteds[
+                list(self.current.connecteds.keys())[0]
+            ][1][0][1]
+            self.current = self.current.connecteds[
+                list(self.current.connecteds.keys())[0]
+            ][1][0][0]
 
-            case ShapeEnum.IN:
-                inp = input("<<< ")
+        elif shape_type == ShapeEnum.IN:
+            inp = input("<<< ")
+            try:
+                self.stack.append(int(inp))
+            except ValueError:
                 try:
-                    self.stack.append(int(inp))
+                    self.stack.append(float(inp))
                 except ValueError:
-                    try:
-                        self.stack.append(float(inp))
-                    except ValueError:
-                        self.stack.append(inp)
+                    self.stack.append(inp)
 
-                self.default_next()
+            self.default_next()
 
-            case ShapeEnum.OUT:
-                if len(self.stack) > 0:
-                    val = self.stack.pop()
+        elif shape_type == ShapeEnum.OUT:
+            if len(self.stack) > 0:
+                val = self.stack.pop()
 
-                    print(val)
-                else:
-                    print()
-                self.default_next()
+                print(val)
+            else:
+                print()
+            self.default_next()
 
-            case ShapeEnum.OUT_NO_LF:
-                if len(self.stack) > 0:
-                    val = self.stack.pop()
+        elif shape_type == ShapeEnum.OUT_NO_LF:
+            if len(self.stack) > 0:
+                val = self.stack.pop()
 
-                    print(val, end="")
+                print(val, end="")
 
-                self.default_next()
+            self.default_next()
 
-            case ShapeEnum.READ:
-                if len(self.stack) > 0:
+        elif shape_type == ShapeEnum.READ:
+            if len(self.stack) > 0:
                     path = str(self.stack.pop())
 
                     try:
@@ -131,265 +131,264 @@ class Interpreter:
 
                         self.stack.append(2)
 
-                self.default_next()
+            self.default_next()
 
-            case ShapeEnum.CONTAINER:
-                if self.current.value is not None:
-                    self.stack.append(self.current.value)
-                    self.current.value = None
+        elif shape_type == ShapeEnum.CONTAINER:
+            if self.current.value is not None:
+                self.stack.append(self.current.value)
+                self.current.value = None
+            else:
+                self.current.value = self.stack.pop()
+            self.default_next()
+
+        elif shape_type == ShapeEnum.STACK:
+            if self.verbose:
+                print(f"|current local stack: {self.current.value}|")
+            if len(self.stack) > 1:
+                top = self.stack.pop()
+                bottom = self.stack.pop()
+
+                if top == 1:
+                    if self.current.value is None:
+                        self.current.value = [bottom]
+                    else:
+                        self.current.value.append(bottom)
+                elif top == 2:
+                    self.stack.append(bottom)
+                    self.stack.append(len(self.current.value))
+                elif top == 0:
+                    if len(self.current.value) > 0:
+                        self.stack.append(bottom)
+
+                        self.stack.append(self.current.value.pop())
+                    else:
+                        self.stack.append(bottom)
                 else:
-                    self.current.value = self.stack.pop()
-                self.default_next()
+                    self.stack.append(bottom)
+                    self.stack.append(top)
+            self.default_next()
 
-            case ShapeEnum.STACK:
-                if self.verbose:
-                    print(f"|current local stack: {self.current.value}|")
-                if len(self.stack) > 1:
-                    top = self.stack.pop()
-                    bottom = self.stack.pop()
+        elif shape_type == ShapeEnum.JUNCTION:
+            self.default_next()
 
-                    if top == 1:
-                        if self.current.value is None:
-                            self.current.value = [bottom]
-                        else:
-                            self.current.value.append(bottom)
-                    elif top == 2:
-                        self.stack.append(bottom)
-                        self.stack.append(len(self.current.value))
-                    elif top == 0:
-                        if len(self.current.value) > 0:
-                            self.stack.append(bottom)
+        elif shape_type == ShapeEnum.NUMBER:
+            if self.verbose:
+                print(f"|number shape value: {self.current.get_value()}|")
+            self.stack.append(self.current.get_value())
+            self.default_next()
 
-                            self.stack.append(self.current.value.pop())
-                        else:
-                            self.stack.append(bottom)
-                    else:
-                        self.stack.append(bottom)
-                        self.stack.append(top)
-                self.default_next()
+        elif shape_type == ShapeEnum.POP:
+            if len(self.stack) > 0:
+                self.stack.pop()
+            self.default_next()
 
-            case ShapeEnum.JUNCTION:
-                self.default_next()
+        elif shape_type == ShapeEnum.DUPE:
+            if len(self.stack) > 0:
+                self.stack.append(self.stack[-1])
+            self.default_next()
 
-            case ShapeEnum.NUMBER:
-                if self.verbose:
-                    print(f"|number shape value: {self.current.get_value()}|")
-                self.stack.append(self.current.get_value())
-                self.default_next()
+        elif shape_type == ShapeEnum.NUMBER_CHECK:
+            if len(self.stack) > 0:
+                val = self.stack.pop()
+                self.stack.append(int(self.check_number(val)))
+            self.default_next()
 
-            case ShapeEnum.POP:
-                if len(self.stack) > 0:
-                    self.stack.pop()
-                self.default_next()
+        elif shape_type == ShapeEnum.TO_STRING:
+            if len(self.stack) > 0:
+                self.stack.append(str(self.stack.pop()))
+            self.default_next()
 
-            case ShapeEnum.DUPE:
-                if len(self.stack) > 0:
-                    self.stack.append(self.stack[-1])
-                self.default_next()
+        elif shape_type == ShapeEnum.TO_CHAR:
+            if len(self.stack) > 0:
+                val = self.stack.pop()
+                if isinstance(val, (float, int)):
+                    self.stack.append(chr(int(val)))
+                elif isinstance(val, str):
+                    self.stack.extend([i for i in val[::-1]])
+            self.default_next()
 
-            case ShapeEnum.NUMBER_CHECK:
-                if len(self.stack) > 0:
-                    val = self.stack.pop()
-                    self.stack.append(int(self.check_number(val)))
-                self.default_next()
+        elif shape_type == ShapeEnum.CHR_TO_NUM:
+            if len(self.stack) > 0:
+                val = self.stack.pop()
+                if isinstance(val, str):
+                    if len(val) == 1:
+                        self.stack.append(ord(val))
+                else:
+                    self.stack.append(val)
 
-            case ShapeEnum.TO_STRING:
-                if len(self.stack) > 0:
-                    self.stack.append(str(self.stack.pop()))
-                self.default_next()
+            self.default_next()
 
-            case ShapeEnum.TO_CHAR:
-                if len(self.stack) > 0:
-                    val = self.stack.pop()
-                    if isinstance(val, (float, int)):
-                        self.stack.append(chr(int(val)))
-                    elif isinstance(val, str):
-                        self.stack.extend([i for i in val[::-1]])
-                self.default_next()
+        elif shape_type == ShapeEnum.TO_NUMBER:
+            if len(self.stack) > 0:
+                val = self.stack.pop()
 
-            case ShapeEnum.CHR_TO_NUM:
-                if len(self.stack) > 0:
-                    val = self.stack.pop()
-                    if isinstance(val, str):
-                        if len(val) == 1:
-                            self.stack.append(ord(val))
-                    else:
+                try:
+                    self.stack.append(int(val))
+                except ValueError:
+                    try:
+                        self.stack.append(float(val))
+                    except ValueError:
                         self.stack.append(val)
 
-                self.default_next()
+            self.default_next()
 
-            case ShapeEnum.TO_NUMBER:
-                if len(self.stack) > 0:
-                    val = self.stack.pop()
+        elif shape_type == ShapeEnum.OPER:
+            if len(self.stack) > 1:
+                a = self.stack.pop()
+                b = self.stack.pop()
 
-                    try:
-                        self.stack.append(int(val))
-                    except ValueError:
-                        try:
-                            self.stack.append(float(val))
-                        except ValueError:
-                            self.stack.append(val)
+                def _both_is_num():
+                    return self.both_is_num(a, b)
 
-                self.default_next()
+                def _neither_is_num():
+                    return self.neither_is_num(a, b)
 
-            case ShapeEnum.OPER:
-                if len(self.stack) > 1:
-                    a = self.stack.pop()
-                    b = self.stack.pop()
+                def _push_back():
+                    self.stack.append(b)
+                    self.stack.append(a)
 
-                    def _both_is_num():
-                        return self.both_is_num(a, b)
+                l = len(self.current.get_holes())
 
-                    def _neither_is_num():
-                        return self.neither_is_num(a, b)
+                if self.verbose:
+                    print(f"|operation shape code: {l}|")
 
-                    def _push_back():
-                        self.stack.append(b)
-                        self.stack.append(a)
-
-                    l = len(self.current.get_holes())
-
-                    if self.verbose:
-                        print(f"|operation shape code: {l}|")
-
-                    match l:
-                        case 1:
-                            if _both_is_num():
-                                self.stack.append(a + b)
-                            elif _neither_is_num():
-                                self.stack.append(a + b)
-                            else:
-                                _push_back()
-                        case 2:
-                            if _both_is_num():
-                                self.stack.append(a - b)
-                            else:
-                                _push_back()
-                        case 3:
-                            if _both_is_num():
-                                self.stack.append(a * b)
-                            else:
-                                _push_back()
-                        case 4:
-                            if _both_is_num():
-                                if b != 0:
-                                    self.stack.append(a / b)
-                                else:
-                                    self.stack.append("NaN")
-                            else:
-                                _push_back()
-                        case 5:
-                            if _both_is_num():
-                                self.stack.append(a % b)
-                            else:
-                                _push_back()
-                        case 6:
-                            self.stack.append(str(a) + str(b))
-                        case _:
-                            self.stack.append(a)
-                            self.stack.append(b)
-                self.default_next()
-
-            case ShapeEnum.OR:
-                if len(self.stack) > 1:
-                    a = self.stack.pop()
-                    b = self.stack.pop()
-                    if self.both_is_num(a, b) or self.neither_is_num(a, b):
-                        self.stack.append(a or b)
+                if l == 1:
+                    if _both_is_num():
+                        self.stack.append(a + b)
+                    elif _neither_is_num():
+                        self.stack.append(a + b)
                     else:
-                        self.push_back(a, b)
-
-                self.default_next()
-
-            case ShapeEnum.AND:
-                if len(self.stack) > 1:
-                    a = self.stack.pop()
-                    b = self.stack.pop()
-                    if self.both_is_num(a, b) or self.neither_is_num(a, b):
-                        self.stack.append(a and b)
+                        _push_back()
+                elif l == 2:
+                    if _both_is_num():
+                        self.stack.append(a - b)
                     else:
-                        self.push_back(a, b)
-
-                self.default_next()
-
-            case ShapeEnum.NOT:
-                if len(self.stack) > 0:
-                    val = self.stack.pop()
-                    self.stack.append(int(not val))
-
-                self.default_next()
-
-            case ShapeEnum.EQUALS:
-                if len(self.stack) > 1:
-                    a = self.stack.pop()
-                    b = self.stack.pop()
-                    if self.both_is_num(a, b) or self.neither_is_num(a, b):
-                        self.stack.append(int(a == b))
+                        _push_back()
+                elif l == 3:
+                    if _both_is_num():
+                        self.stack.append(a * b)
                     else:
-                        self.push_back(a, b)
-
-                self.default_next()
-
-            case ShapeEnum.LARGER:
-                if len(self.stack) > 1:
-                    a = self.stack.pop()
-                    b = self.stack.pop()
-                    if self.both_is_num(a, b) or self.neither_is_num(a, b):
-                        self.stack.append(int(a > b))
+                        _push_back()
+                elif l == 4:
+                    if _both_is_num():
+                        if b != 0:
+                            self.stack.append(a / b)
+                        else:
+                            self.stack.append("NaN")
                     else:
-                        self.push_back(a, b)
-
-                self.default_next()
-
-            case ShapeEnum.SMALLER:
-                if len(self.stack) > 1:
-                    a = self.stack.pop()
-                    b = self.stack.pop()
-                    if self.both_is_num(a, b) or self.neither_is_num(a, b):
-                        self.stack.append(int(a < b))
+                        _push_back()
+                elif l == 5:
+                    if _both_is_num():
+                        self.stack.append(a % b)
                     else:
-                        self.push_back(a, b)
+                        _push_back()
+                elif l == 6:
+                    self.stack.append(str(a) + str(b))
+                else:
+                    self.stack.append(a)
+                    self.stack.append(b)
+            self.default_next()
 
-                self.default_next()
+        elif shape_type == ShapeEnum.OR:
+            if len(self.stack) > 1:
+                a = self.stack.pop()
+                b = self.stack.pop()
+                if self.both_is_num(a, b) or self.neither_is_num(a, b):
+                    self.stack.append(a or b)
+                else:
+                    self.push_back(a, b)
 
-            case ShapeEnum.LENGTH:
-                self.stack.append(len(self.stack))
-                self.default_next()
+            self.default_next()
 
-            case ShapeEnum.CONTROL:
-                target = None
-                if len(self.stack) > 0:
-                    target = self.stack.pop()
-                matches = []
+        elif shape_type == ShapeEnum.AND:
+            if len(self.stack) > 1:
+                a = self.stack.pop()
+                b = self.stack.pop()
+                if self.both_is_num(a, b) or self.neither_is_num(a, b):
+                    self.stack.append(a and b)
+                else:
+                    self.push_back(a, b)
+
+            self.default_next()
+
+        elif shape_type == ShapeEnum.NOT:
+            if len(self.stack) > 0:
+                val = self.stack.pop()
+                self.stack.append(int(not val))
+
+            self.default_next()
+
+        elif shape_type == ShapeEnum.EQUALS:
+            if len(self.stack) > 1:
+                a = self.stack.pop()
+                b = self.stack.pop()
+                if self.both_is_num(a, b) or self.neither_is_num(a, b):
+                    self.stack.append(int(a == b))
+                else:
+                    self.push_back(a, b)
+
+            self.default_next()
+
+        elif shape_type == ShapeEnum.LARGER:
+            if len(self.stack) > 1:
+                a = self.stack.pop()
+                b = self.stack.pop()
+                if self.both_is_num(a, b) or self.neither_is_num(a, b):
+                    self.stack.append(int(a > b))
+                else:
+                    self.push_back(a, b)
+
+            self.default_next()
+
+        elif shape_type == ShapeEnum.SMALLER:
+            if len(self.stack) > 1:
+                a = self.stack.pop()
+                b = self.stack.pop()
+                if self.both_is_num(a, b) or self.neither_is_num(a, b):
+                    self.stack.append(int(a < b))
+                else:
+                    self.push_back(a, b)
+
+            self.default_next()
+
+        elif shape_type == ShapeEnum.LENGTH:
+            self.stack.append(len(self.stack))
+            self.default_next()
+
+        elif shape_type == ShapeEnum.CONTROL:
+            target = None
+            if len(self.stack) > 0:
+                target = self.stack.pop()
+            matches = []
+            for c in self.current.get_all_connections():
+                if c[0].get_value() == target and c[2] != self.p_k:
+                    matches.append(c)
+            if len(matches) < 1:
                 for c in self.current.get_all_connections():
-                    if c[0].get_value() == target and c[2] != self.p_k:
+                    if c[0].get_value() == None and c[2] != self.p_k:
                         matches.append(c)
-                if len(matches) < 1:
-                    for c in self.current.get_all_connections():
-                        if c[0].get_value() == None and c[2] != self.p_k:
-                            matches.append(c)
 
-                min_dist = None
-                nearest = None
-                for m in matches:
-                    dist = distance(self.current.center, m[1])
-                    if min_dist is None or dist < min_dist:
-                        min_dist = dist
-                        nearest = m
+            min_dist = None
+            nearest = None
+            for m in matches:
+                dist = distance(self.current.center, m[1])
+                if min_dist is None or dist < min_dist:
+                    min_dist = dist
+                    nearest = m
 
-                if nearest is None:
-                    print()
-                    print("|finished due to dead-end|")
-                    self.is_running=False
-                self.current = nearest[0]
-                self.p_point = nearest[1]
-            case ShapeEnum.END:
+            if nearest is None:
                 print()
-                print("--------------|finished|--------------")
+                print("|finished due to dead-end|")
                 self.is_running=False
+            self.current = nearest[0]
+            self.p_point = nearest[1]
+        elif shape_type == ShapeEnum.END:
+            print()
+            print("--------------|finished|--------------")
+            self.is_running=False
 
-            case ShapeEnum.ANY:
-                self.default_next()
+        elif shape_type == ShapeEnum.ANY:
+            self.default_next()
         if self.verbose:
             print(f"|global stack: {self.stack}|")
             if self.is_running:
