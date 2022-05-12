@@ -8,8 +8,8 @@ Disclaimer: I have no idea what I am doing
    The it just works update
 
    - [X] Rewrite wiki
-   - [ ] Put this on pypi. If you're reading this, halp. How??
-   - [ ] Remove 3.10 dependency
+   - [X] Put this on pypi. ~~If you're reading this, halp. How??~~ Thanks Lyxal :3
+   - [X] Remove 3.10 dependency
 
  * 1.0
    
