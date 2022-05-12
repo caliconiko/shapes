@@ -362,7 +362,7 @@ class Interpreter:
                     matches.append(c)
             if len(matches) < 1:
                 for c in self.current.get_all_connections():
-                    if c[0].get_value() == None and c[2] != self.p_k:
+                    if c[0].get_value() is None and c[2] != self.p_k:
                         matches.append(c)
 
             min_dist = None
