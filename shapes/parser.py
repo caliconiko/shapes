@@ -327,7 +327,6 @@ class Parser:
         back_only_flood = real_back.copy()
 
         cv2.floodFill(back_only_flood, None, (0, 0), 0)[1]
-        back_only = cv2.bitwise_xor(back_only_flood, real_back)
 
         real_back_shape = cv2.bitwise_not(
             masks.shape,
