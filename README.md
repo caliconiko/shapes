@@ -8,7 +8,7 @@ Shapes is a~~n award winning~~ graphical esolang that uses images with shapes!
 
 In short, a Shapes program consists of shapes and paths connecting them. Each shape does different things depending on the shape of the shape.
 
-For more Shapes Information, go to the [wiki](https://github.com/PhotonNikko/shapes/wiki).
+For more Shapes Information, go to the [wiki](https://github.com/photon-niko/shapes/wiki).
 
 ## Shapes?
 
