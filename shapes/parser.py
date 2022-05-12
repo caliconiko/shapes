@@ -183,7 +183,6 @@ class Parser:
             for c in circles[0]:
                 cv2.circle(img, (int(c[0]), int(c[1])), int(c[2]), (0, 255, 0), 3)
                 cv2.circle(img, (int(c[0]), int(c[1])), 10, (0, 255, 0), -10)
-                pass
 
         return circles
 
@@ -329,7 +328,6 @@ class Parser:
 
         cv2.floodFill(back_only_flood, None, (0, 0), 0)[1]
         back_only = cv2.bitwise_xor(back_only_flood, real_back)
-        shapes_or_path_no_holes = cv2.bitwise_not(back_only)
 
         real_back_shape = cv2.bitwise_not(
             masks.shape,
