@@ -3,13 +3,14 @@
 Things to do to reach a certain release version
 
 Disclaimer: I have no idea what I am doing
- * 0.0
+ * 0.1
 
    The it just works update
 
    - [X] Rewrite wiki
    - [X] Put this on pypi. ~~If you're reading this, halp. How??~~ Thanks Lyxal :3
    - [X] Remove 3.10 dependency
+   - [ ] Move docs to read the docs
 
  * 1.0
    
@@ -18,7 +19,6 @@ Disclaimer: I have no idea what I am doing
    - [ ] Completely restructure code
    - [ ] Dictionaries
    - [ ] Compiling
-   - [ ] Move docs to read the docs
    
  * 2.0 
 

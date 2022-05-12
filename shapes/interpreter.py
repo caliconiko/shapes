@@ -237,11 +237,8 @@ class Interpreter:
                 a = self.stack.pop()
                 b = self.stack.pop()
 
-                def _both_is_num():
-                    return self.both_is_num(a, b)
-
-                def _neither_is_num():
-                    return self.neither_is_num(a, b)
+                both_is_num = self.both_is_num(a, b)
+                neither_is_num = self.neither_is_num(a, b)
 
                 def _push_back():
                     self.stack.append(b)
@@ -253,24 +250,24 @@ class Interpreter:
                     print(f"|operation shape code: {l}|")
 
                 if l == 1:
-                    if _both_is_num():
+                    if both_is_num:
                         self.stack.append(a + b)
-                    elif _neither_is_num():
+                    elif neither_is_num:
                         self.stack.append(a + b)
                     else:
                         _push_back()
                 elif l == 2:
-                    if _both_is_num():
+                    if both_is_num:
                         self.stack.append(a - b)
                     else:
                         _push_back()
                 elif l == 3:
-                    if _both_is_num():
+                    if both_is_num:
                         self.stack.append(a * b)
                     else:
                         _push_back()
                 elif l == 4:
-                    if _both_is_num():
+                    if both_is_num:
                         if b != 0:
                             self.stack.append(a / b)
                         else:
@@ -278,7 +275,7 @@ class Interpreter:
                     else:
                         _push_back()
                 elif l == 5:
-                    if _both_is_num():
+                    if both_is_num:
                         self.stack.append(a % b)
                     else:
                         _push_back()
