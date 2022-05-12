@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shaapes"
-version = "0.1.0.dev7"
+version = "0.1.0.dev8"
 description = "A graphical shape based esolang"
 keywords = ["shapes", "graphical", "esoteric", "esolang", "programming", "language", "graph", "image"]
 authors = ["Calico Niko"]
