@@ -17,7 +17,7 @@ def print_shapes_found(shapes:List[Shape]):
 def main():
     # start parsers
     arg_parser = argparse.ArgumentParser(
-        description="Shapes Interpreter for Python 3.10"
+        description="Shapes Interpreter for Python 3.9+"
     )
 
     subparsers = arg_parser.add_subparsers(dest="command")
@@ -38,7 +38,7 @@ def main():
         help="path of file to interpret. if the given path doesn't have a file format, it defaults to .png",
     )
     interpret_parser.add_argument(
-        "-t", "--time", type=float, help="seconds to wait for every step"
+        "-t", "--time", type=float, help="seconds to wait for every step. if it is negative, press enter to step the program"
     )
     interpret_parser.add_argument(
         "-v",
@@ -79,42 +79,43 @@ def main():
     if args.path[-4:] != ".png":
         path = args.path + ".png"
 
-    match args.command:
-        case "profile":
-            print("|profiling...|")
-            cProfile.runctx(
-                "Parser(path, args.debug).parse_shapes()",
-                globals(),
-                locals(),
-                sort="tottime",
-            )
-            print("|profiled!|")
+    command = args.command
 
-        case "interpret":
-            print(f"|parsing {path}...|")
-            parser = Parser(path, args.debug)
-            parse_start = time()
-            shapes = parser.parse_shapes()
-            parse_end = time()
-            print(f"|parsed! {round(parse_end-parse_start, 3)} seconds elapsed|")
-            if args.debug:
-                print_shapes_found(shapes)
-            print("--------------------------------------")
-            t = args.time
-            if args.time is None:
-                t = 0
+    if command == "profile":
+        print("|profiling...|")
+        cProfile.runctx(
+            "Parser(path, args.debug).parse_shapes()",
+            globals(),
+            locals(),
+            sort="tottime",
+        )
+        print("|profiled!|")
 
-            interpreter = Interpreter(shapes, args.verbose, t, home_dir=parser.home_dir)
-            interpreter.run()
-
-        case "parse":
-            print(f"|parsing {path}...|")
-            parser = Parser(path, True)
-            parse_start = time()
-            shapes = parser.parse_shapes()
-            parse_end = time()
-            print(f"|parsed! {round(parse_end-parse_start, 3)} seconds elapsed|")
+    elif command == "interpret":
+        print(f"|parsing {path}...|")
+        parser = Parser(path, args.debug)
+        parse_start = time()
+        shapes = parser.parse_shapes()
+        parse_end = time()
+        print(f"|parsed! {round(parse_end-parse_start, 3)} seconds elapsed|")
+        if args.debug:
             print_shapes_found(shapes)
+        print("--------------------------------------")
+        t = args.time
+        if args.time is None:
+            t = 0
+
+        interpreter = Interpreter(shapes, args.verbose, t, home_dir=parser.home_dir)
+        interpreter.run()
+
+    elif command == "parse":
+        print(f"|parsing {path}...|")
+        parser = Parser(path, True)
+        parse_start = time()
+        shapes = parser.parse_shapes()
+        parse_end = time()
+        print(f"|parsed! {round(parse_end-parse_start, 3)} seconds elapsed|")
+        print_shapes_found(shapes)
 
 
 if __name__ == "__main__":

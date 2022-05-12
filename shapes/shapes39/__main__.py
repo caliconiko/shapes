@@ -17,7 +17,7 @@ def print_shapes_found(shapes:List[Shape]):
 def main():
     # start parsers
     arg_parser = argparse.ArgumentParser(
-        description="Shapes Interpreter for Python 3.10"
+        description="Shapes Interpreter for Python 3.9"
     )
 
     subparsers = arg_parser.add_subparsers(dest="command")
