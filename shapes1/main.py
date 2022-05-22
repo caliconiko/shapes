@@ -1,4 +1,7 @@
 import argparse
+from pathlib import Path
+
+from shapes1.parser import Parser
 
 
 def main():
@@ -17,6 +20,7 @@ def main():
     )
 
     args = arg_parser.parse_args()
-    path = args.path
+    path = Path(args.path)
 
-    print(path)
+    parser = Parser(path)
+    parser.parse_frames()
