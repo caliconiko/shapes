@@ -15,8 +15,19 @@ class Parser:
         assert self.image is not None, "That's not an image (I think)"
 
     def parse_frames(self):
-        border_colors = get_border_colors_clockwise(self.image)
-        background_mask = get_color_ranges_mask(border_colors, self.image)
+        background_mask = get_background_mask(self.image)
 
+        foreground_mask = cv2.bitwise_not(background_mask)
+        foreground_mask = clean_mask(foreground_mask)
+
+        contours, hierarchy = cv2.findContours(foreground_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        sorted_hierarchy_tree = sort_hierarchy_tree(hierarchy)
+
+        shape_frame_mask = mask_contours_of_hierarchy_with_holes(sorted_hierarchy_tree, contours, 0, self.image)
+
+        path_frame_mask = mask_contours_of_hierarchy_with_holes(sorted_hierarchy_tree, contours, 2, self.image)
+
+        display(shape_frame_mask, "shape_frame_mask")
+        display(path_frame_mask, "path_frame_mask")
         display_and_wait(self.image, "Image")
-        display_and_wait(background_mask, "Background Mask")
