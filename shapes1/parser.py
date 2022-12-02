@@ -1,6 +1,7 @@
 import cv2
 from pathlib import Path
 import numpy as np
+import imutils
 
 from shapes1.cv_helper import *
 
@@ -28,6 +29,7 @@ class Parser:
 
         path_frame_mask = mask_contours_of_hierarchy_with_holes(sorted_hierarchy_tree, contours, 2, self.image)
 
-        display(shape_frame_mask, "shape_frame_mask")
-        display(path_frame_mask, "path_frame_mask")
+        skelotonized_shape_frame_mask = imutils.skeletonize(shape_frame_mask, (10, 10), structuring=cv2.MORPH_CROSS)
+        display(skelotonized_shape_frame_mask, "skelotonized shape frame mask")
+
         display_and_wait(self.image, "Image")
