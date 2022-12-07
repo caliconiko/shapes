@@ -3,12 +3,14 @@ import numpy as np
 from collections import defaultdict
 
 
-def display(image, name="Image"):
-    cv2.imshow(name, image)
+def display(img, winname="Display"):
+    cv2.imshow(winname, img)
 
-def display_and_wait(image, name="Image"):
-    cv2.imshow(name, image)
-    cv2.waitKey(0)
+def display_and_wait(img, winname="Press any key. Press 'q' to quit."):
+    display(img, winname)
+    key = cv2.waitKey(0)
+    if key == ord('q'):
+        raise KeyboardInterrupt
 
 def get_ordered_colors_of_image_strip(image):
     color_index = np.unique(image, axis=0, return_inverse=True)
@@ -137,3 +139,34 @@ def mask_contours_of_hierarchy_with_holes(sorted_hierarchies, contours, hierarch
     mask_with_hole = cv2.bitwise_xor(mask, hole_mask)
 
     return mask_with_hole
+
+def morph(img, kernel_size=2, morph=cv2.MORPH_BLACKHAT):
+    kernel = np.ones((kernel_size,kernel_size),np.uint8)
+    return cv2.morphologyEx(img, morph, kernel)
+
+def morph_func(img, func, kernel_size=2, iterations=1):
+    kernel = np.ones((kernel_size,kernel_size),np.uint8)
+    return func(img, kernel, iterations=iterations)
+
+# hat tip to https://gist.github.com/jsheedy/3913ab49d344fac4d02bcc887ba4277d
+def skeletonize(img):
+    """ OpenCV function to return a skeletonized version of img, a Mat object"""
+
+    #  hat tip to http://felix.abecassis.me/2011/09/opencv-morphological-skeleton/
+
+    img = img.copy() # don't clobber original
+    skel = img.copy()
+
+    skel[:,:] = 0
+    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (3,3))
+
+    while True:
+        eroded = cv2.morphologyEx(img, cv2.MORPH_ERODE, kernel)
+        temp = cv2.morphologyEx(eroded, cv2.MORPH_DILATE, kernel)
+        temp  = cv2.subtract(img, temp)
+        skel = cv2.bitwise_or(skel, temp)
+        img[:,:] = eroded[:,:]
+        if cv2.countNonZero(img) == 0:
+            break
+
+    return skel
