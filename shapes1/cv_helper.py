@@ -58,10 +58,11 @@ def get_background_mask(image):
 
     return get_color_ranges_mask(border_colors, image)
 
-def clean_mask(mask, kernel_size=3):
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-    return mask
+def clean_mask_open(mask, kernel_size=3):
+    return morph(mask, kernel_size, cv2.MORPH_OPEN)
+
+def clean_mask_close(mask, kernel_size=3):
+    return morph(mask, kernel_size, cv2.MORPH_CLOSE)
 
 def get_tree_next_index(hierarchy_tree, index):
     return hierarchy_tree[index][0]
@@ -124,13 +125,13 @@ def mask_contour(contour, image):
     cv2.drawContours(mask, [contour], -1, 255, -1)
     return mask
 
-def mask_contours(contours, image):
+def mask_contours(contours, image, thickness=-1):
     mask = np.zeros(image.shape[:2], np.uint8)
-    cv2.drawContours(mask, contours, -1, 255, -1)
+    cv2.drawContours(mask, contours, -1, 255, thickness)
     return mask
 
-def mask_contours_of_hierarchy(sorted_hierarchies, contours, hierarchy, image):
-    return mask_contours(get_contours_of_hierarchy(sorted_hierarchies, contours, hierarchy), image)
+def mask_contours_of_hierarchy(sorted_hierarchies, contours, hierarchy, image, thickness=-1):
+    return mask_contours(get_contours_of_hierarchy(sorted_hierarchies, contours, hierarchy), image, thickness)
 
 def mask_contours_of_hierarchy_with_holes(sorted_hierarchies, contours, hierarchy, image):
     mask = mask_contours_of_hierarchy(sorted_hierarchies, contours, hierarchy, image)
@@ -170,3 +171,4 @@ def skeletonize(img):
             break
 
     return skel
+
